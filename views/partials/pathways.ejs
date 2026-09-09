@@ -1,0 +1,63 @@
+<section class="w-full py-space-3xl bg-surface-container-low" id="craft-pathways">
+  <div class="max-w-7xl mx-auto px-margin-page">
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-space-2xl gap-space-md">
+      <div>
+        <span class="font-label-caps text-label-caps text-secondary uppercase tracking-widest block mb-space-2xs">Dedicated Faculties</span>
+        <h2 class="font-headline-lg text-headline-lg text-primary">Vocational Craft Disciplines</h2>
+      </div>
+      <p class="font-body-md text-body-md text-on-surface-variant max-w-md">
+        Each craft pathway is led by accredited master artisans with high-spec workshop machinery and contemporary design integration.
+      </p>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-space-md">
+      <% const courses = [
+        { icon: 'styler', title: 'Fashion & Textile Design', items: ['Fashion Designing', 'Textile & Fabric Design', 'Knitting & Fashion'] },
+        { icon: 'shopping_bag', title: 'Leather & Product Craft', items: ['Leatherworks', 'Shoe Making', 'Bag Making', 'Small Leather Accessories'] },
+        { icon: 'chair', title: 'Furniture & Wood Craft', items: ['Furniture Making', 'Woodworking', 'Wood Décor & Finishing'] },
+        { icon: 'auto_awesome', title: 'Bead, Wire & Decorative Craft', items: ['Bead Making', 'Wire Works', 'Fascinator Making', 'Umbrella Making', 'Decorative Craft'] },
+        { icon: 'diamond', title: 'Jewellery & Accessories Design', items: ['Jewellery Making', 'Fashion Accessories', 'Handmade Accessories', 'Product Finishing & Presentation'] },
+        { icon: 'palette', title: 'Creative Arts, Photography & Ceramics', items: ['Creative Art', 'Drawing & Painting', 'Photography', 'Art & Ceramics', 'Mixed-Media Art'] },
+        { icon: 'restaurant', title: 'Culinary Arts & Hospitality', items: ['Culinary Arts', 'Baking & Confectionery', 'Food Presentation', 'Catering', 'Hospitality & Event Service'] },
+        { icon: 'spa', title: 'Beauty & Personal Care', items: ['Hairdressing', 'Makeup Artistry', 'Gele Styling', 'Beauty Craft', 'Personal Grooming & Beauty Enterprise'] },
+      ]; %>
+      <% courses.forEach(course => { %>
+        <div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
+          <div>
+            <div class="w-12 h-12 rounded-lg bg-surface-container flex items-center justify-center text-primary mb-space-sm">
+              <span class="material-symbols-outlined text-[26px]"><%= course.icon %></span>
+            </div>
+            <h3 class="font-title-md text-title-md text-primary mb-space-xs"><%= course.title %></h3>
+          </div>
+          <div class="flex flex-wrap gap-space-3xs pt-space-xs">
+            <% course.items.forEach(item => { %>
+              <span class="px-space-xs py-space-3xs rounded bg-surface-container-high text-on-surface font-caption text-[11px]"><%= item %></span>
+            <% }) %>
+          </div>
+        </div>
+      <% }) %>
+    </div>
+
+    <!-- Digital Creative Enterprise: applies to every student, regardless of chosen craft -->
+    <div class="mt-space-md bg-primary text-on-primary rounded-2xl p-space-lg md:p-space-xl">
+      <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md mb-space-md">
+        <div class="flex items-center gap-space-md">
+          <div class="w-14 h-14 rounded-xl bg-primary-container flex items-center justify-center text-secondary-fixed shrink-0">
+            <span class="material-symbols-outlined text-[28px]">devices</span>
+          </div>
+          <div>
+            <span class="font-label-caps text-label-caps text-secondary-fixed uppercase tracking-widest block mb-space-3xs">For ALL Root &amp; Rise Students</span>
+            <h3 class="font-headline-sm text-headline-sm text-secondary-fixed">Digital Creative Enterprise</h3>
+          </div>
+        </div>
+        <p class="font-body-md text-body-md text-primary-fixed-dim max-w-md">
+          Every student, regardless of craft, graduates equipped to build, market, and run their enterprise online.
+        </p>
+      </div>
+      <div class="flex flex-wrap gap-space-2xs">
+        <% ['Digital Literacy', 'Graphic Design', 'Photography & Videography', 'Content Creation', 'Social Media Management', 'Digital Marketing', 'E-commerce', 'Personal Branding', 'AI & Digital Productivity', 'Portfolio Development', 'Digital Entrepreneurship'].forEach(skill => { %>
+          <span class="px-space-sm py-space-2xs rounded-full bg-primary-container text-secondary-fixed font-label-md text-label-md"><%= skill %></span>
+        <% }) %>
+      </div>
+    </div>
+  </div>
+</section>

@@ -1,0 +1,126 @@
+<section class="w-full py-space-3xl bg-surface-container">
+  <div class="max-w-7xl mx-auto px-margin-page">
+    <div class="text-center max-w-2xl mx-auto mb-space-2xl">
+      <span class="font-label-caps text-label-caps text-secondary uppercase tracking-widest block mb-space-2xs">Join Cohort <%= cohort %></span>
+      <h2 class="font-headline-lg text-headline-lg text-primary mb-space-xs">Admissions &amp; Financial Access</h2>
+      <p class="font-body-md text-body-md text-on-surface-variant">
+        We prioritize passion, commitment, and raw creative aptitude over previous academic status. Financial grants ensure excellence remains accessible.
+      </p>
+    </div>
+    <div class="bg-surface-container-lowest rounded-2xl p-space-lg md:p-space-xl shadow-md mb-space-xl">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-space-lg items-center">
+        <div class="flex items-center gap-space-md">
+          <div class="w-16 h-16 rounded-xl bg-primary-container text-on-primary flex items-center justify-center shrink-0">
+            <span class="material-symbols-outlined text-[32px] text-secondary-fixed">event</span>
+          </div>
+          <div>
+            <span class="font-label-caps text-label-caps text-secondary uppercase">Resumption Date</span>
+            <p class="font-headline-md text-headline-md text-primary font-bold"><%= resumptionDate %></p>
+            <span class="font-caption text-caption text-on-surface-variant">Orientation &amp; Studio Induction</span>
+          </div>
+        </div>
+        <div class="flex items-center gap-space-md pt-space-md md:pt-0">
+          <div class="w-16 h-16 rounded-xl bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center shrink-0">
+            <span class="material-symbols-outlined text-[32px]">payments</span>
+          </div>
+          <div>
+            <span class="font-label-caps text-label-caps text-secondary uppercase">Registration Form Fee</span>
+            <p class="font-headline-md text-headline-md text-primary font-bold"><%= registrationFee %></p>
+            <span class="font-caption text-caption text-on-surface-variant">Twenty Thousand Naira Only</span>
+          </div>
+        </div>
+        <div class="flex flex-col justify-center pt-space-md md:pt-0">
+          <span class="font-headline-sm text-headline-sm text-secondary italic">A new journey. A new chapter.</span>
+          <span class="font-title-md text-title-md text-primary">Your future starts right here!</span>
+          <p class="font-caption text-caption text-on-surface-variant mt-1">Application submissions reviewed on rolling review cycles.</p>
+        </div>
+      </div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-space-lg">
+      <div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col justify-between">
+        <div>
+          <div class="flex items-center gap-space-xs mb-space-sm">
+            <span class="material-symbols-outlined text-secondary text-[24px]">workspace_premium</span>
+            <h3 class="font-title-md text-title-md text-primary">Scholarship Opportunities</h3>
+          </div>
+          <p class="font-body-sm text-body-sm text-on-surface-variant mb-space-md">
+            We are committed to making quality artisanal education accessible to high-potential talent regardless of economic background.
+          </p>
+          <div class="space-y-space-sm">
+            <div class="bg-surface-container-low p-space-xs rounded-lg">
+              <span class="font-label-md text-label-md text-primary flex items-center gap-space-3xs">
+                <span class="material-symbols-outlined text-[16px] text-secondary">verified</span> Full Scholarship
+              </span>
+              <span class="font-caption text-caption text-on-surface-variant block mt-space-3xs">Up to 100% programme support for exceptional candidates.</span>
+            </div>
+            <div class="bg-surface-container-low p-space-xs rounded-lg">
+              <span class="font-label-md text-label-md text-primary flex items-center gap-space-3xs">
+                <span class="material-symbols-outlined text-[16px] text-secondary">verified</span> 50% Scholarship
+              </span>
+              <span class="font-caption text-caption text-on-surface-variant block mt-space-3xs">50% waiver on approved annual programme costs.</span>
+            </div>
+            <div class="bg-surface-container-low p-space-xs rounded-lg">
+              <span class="font-label-md text-label-md text-primary flex items-center gap-space-3xs">
+                <span class="material-symbols-outlined text-[16px] text-secondary">verified</span> Accommodation Grant
+              </span>
+              <span class="font-caption text-caption text-on-surface-variant block mt-space-3xs">Living stipends and accommodation subsidy for eligible scholars.</span>
+            </div>
+          </div>
+        </div>
+        <span class="font-caption text-[11px] text-secondary mt-space-md block font-medium">* Scholarships are competitive and granted based on merit, need, and interview assessment.</span>
+      </div>
+      <div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col justify-between">
+        <div>
+          <div class="flex items-center gap-space-xs mb-space-sm">
+            <span class="material-symbols-outlined text-secondary text-[24px]">assignment_turned_in</span>
+            <h3 class="font-title-md text-title-md text-primary">Admission Requirements</h3>
+          </div>
+          <p class="font-body-sm text-body-sm text-on-surface-variant mb-space-md">
+            No prior professional experience required. Your raw passion, trainability, and determination are paramount.
+          </p>
+          <ul class="space-y-space-xs font-body-sm text-body-sm text-on-surface">
+            <% ['Completed Official Application Form', 'Academic records (WAEC/SSCE or equivalent)', 'Proof of age (Ages 16 – 30 years)', 'Personal statement of motivation', 'Creative portfolio (where applicable)', 'Interview / Aptitude Assessment'].forEach(req => { %>
+              <li class="flex items-start gap-space-xs">
+                <span class="material-symbols-outlined text-primary text-[18px] shrink-0 mt-0.5">check_circle</span>
+                <span><%= req %></span>
+              </li>
+            <% }) %>
+          </ul>
+        </div>
+        <div class="mt-space-md p-space-xs bg-surface-container-high rounded-lg text-center">
+          <span class="font-caption text-caption text-primary font-bold">Ages 16 – 30 Cohort Intake</span>
+        </div>
+      </div>
+      <div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col justify-between">
+        <div>
+          <div class="flex items-center gap-space-xs mb-space-sm">
+            <span class="material-symbols-outlined text-secondary text-[24px]">account_balance_wallet</span>
+            <h3 class="font-title-md text-title-md text-primary">Financial Information</h3>
+          </div>
+          <p class="font-body-sm text-body-sm text-on-surface-variant mb-space-md">
+            Transparent, flexible investment structure planned to empower families and self-sponsored scholars.
+          </p>
+          <div class="space-y-space-sm">
+            <div class="bg-surface-container-low p-space-xs rounded-lg">
+              <span class="font-label-md text-label-md text-primary block">Instalment Payment Structure</span>
+              <span class="font-caption text-caption text-on-surface-variant block mt-space-3xs">Payable termly or in custom structured instalments without compound interest.</span>
+            </div>
+            <div class="bg-surface-container-low p-space-xs rounded-lg">
+              <span class="font-label-md text-label-md text-primary block">What Fees Cover</span>
+              <span class="font-caption text-caption text-on-surface-variant block mt-space-3xs">All academic instruction, studio work sessions, mentorship access, and foundational syllabus kit.</span>
+            </div>
+            <div class="bg-surface-container-low p-space-xs rounded-lg">
+              <span class="font-label-md text-label-md text-primary block">Specialised Materials</span>
+              <span class="font-caption text-caption text-on-surface-variant block mt-space-3xs">Specialised bespoke tools and logistics may apply depending on custom projects.</span>
+            </div>
+          </div>
+        </div>
+        <div class="mt-space-md">
+          <a class="block text-center py-space-2xs px-space-sm bg-primary-container text-on-primary rounded-lg font-label-md text-label-md hover:bg-primary transition-colors" href="mailto:rootandriseinstitute@gmail.com?subject=Fee%20Schedule%20Inquiry">
+            Request Full Fee Breakdown
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>

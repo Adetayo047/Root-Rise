@@ -1,0 +1,51 @@
+<section class="w-full py-space-3xl bg-surface-container-lowest">
+  <div class="max-w-7xl mx-auto px-margin-page">
+    <div class="text-center max-w-3xl mx-auto mb-space-2xl">
+      <span class="font-label-caps text-label-caps text-secondary uppercase tracking-widest block mb-space-2xs">Integrated Rigor</span>
+      <h2 class="font-headline-lg text-headline-lg text-primary mb-space-xs">What You Will Learn (Beyond Your Craft)</h2>
+      <p class="font-body-lg text-body-lg text-on-surface-variant">
+        Mastery extends beyond manual dexterity. Root &amp; Rise immerses every student in five universal intellectual and commercial faculties.
+      </p>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-space-md mb-space-2xl">
+      <% const pillars = [
+        { icon: 'auto_stories', title: 'Foundational Studies', items: ['English & Communication', 'Applied Mathematics', 'Reasoning & Aptitude', 'Literature & History', 'Sociology & Psychology'] },
+        { icon: 'trending_up', title: 'Business & Enterprise', items: ['Entrepreneurship', 'Financial Literacy & P&L', 'Growth Marketing', 'Business Development', 'Project Management'] },
+        { icon: 'devices', title: 'Digital & Technology', items: ['Digital Fluency', 'Social Selling & Ads', 'E-Commerce Ops', 'Productivity Systems', 'AI & Emerging Tech'] },
+        { icon: 'gavel', title: 'Legal & Ethics', items: ['Contracts & SLA', 'Intellectual Property', 'Professional Ethics', 'Workplace Standards', 'Company Registration'] },
+        { icon: 'psychology', title: 'Personal & Creative', items: ['Visionary Leadership', 'Articulate Pitching', 'Creative Ideation', 'Personal Branding', 'Global Career Readiness'] },
+      ]; %>
+      <% pillars.forEach(pillar => { %>
+        <div class="bg-surface-container-low rounded-xl p-space-md flex flex-col">
+          <div class="w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center text-secondary mb-space-sm">
+            <span class="material-symbols-outlined text-[22px]"><%= pillar.icon %></span>
+          </div>
+          <h3 class="font-title-md text-title-md text-primary mb-space-sm"><%= pillar.title %></h3>
+          <ul class="font-body-sm text-body-sm text-on-surface-variant space-y-space-2xs">
+            <% pillar.items.forEach(item => { %>
+              <li class="flex items-center gap-space-3xs"><span class="w-1.5 h-1.5 rounded-full bg-secondary"></span> <%= item %></li>
+            <% }) %>
+          </ul>
+        </div>
+      <% }) %>
+    </div>
+    <div class="bg-primary text-on-primary rounded-2xl p-space-lg">
+      <div class="grid grid-cols-2 sm:grid-cols-5 gap-space-md text-center">
+        <% const ecosystem = [
+          { icon: 'group', title: 'Industry Mentorship', sub: '1-on-1 Guidance' },
+          { icon: 'stars', title: 'Creative Showcases', sub: 'Termly Exhibitions' },
+          { icon: 'precision_manufacturing', title: 'Craft Studio Access', sub: 'State-of-Art Tools' },
+          { icon: 'storefront', title: 'Physical Marketplace', sub: 'Direct Sales Channels' },
+          { icon: 'school', title: 'Alumni & Career', sub: 'Lifetime Network' },
+        ]; %>
+        <% ecosystem.forEach((item, i) => { %>
+          <div class="<%= i === ecosystem.length - 1 ? 'col-span-2 sm:col-span-1 ' : '' %>flex flex-col items-center">
+            <span class="material-symbols-outlined text-secondary-fixed text-[28px] mb-space-2xs"><%= item.icon %></span>
+            <span class="font-label-md text-label-md text-on-primary"><%= item.title %></span>
+            <span class="font-caption text-caption text-primary-fixed-dim"><%= item.sub %></span>
+          </div>
+        <% }) %>
+      </div>
+    </div>
+  </div>
+</section>

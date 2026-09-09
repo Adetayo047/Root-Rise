@@ -1,0 +1,19 @@
+{
+  "name": "rootandrise-site",
+  "version": "1.0.0",
+  "description": "Root & Rise Institute of Craft — landing page",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "nodemon server.js"
+  },
+  "dependencies": {
+    "dotenv": "^17.4.2",
+    "ejs": "^3.1.10",
+    "express": "^4.21.2",
+    "nodemailer": "^10.0.1"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.7"
+  }
+}

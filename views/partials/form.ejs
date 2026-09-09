@@ -1,0 +1,145 @@
+<section class="w-full py-space-3xl bg-surface-container-lowest" id="admissions-form">
+  <div class="max-w-7xl mx-auto px-margin-page">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-space-xl items-start">
+      <div class="lg:col-span-5 flex flex-col gap-space-md">
+        <div>
+          <span class="font-label-caps text-label-caps text-secondary uppercase tracking-widest block mb-space-2xs">Official Desk</span>
+          <h2 class="font-headline-lg text-headline-lg text-primary mb-space-xs">Begin Your Registry</h2>
+          <p class="font-body-md text-body-md text-on-surface-variant leading-relaxed">
+            Fill out the digital registration inquiry. An admissions counsellor will contact you within 24 hours to schedule your aptitude interview and process form verification.
+          </p>
+        </div>
+        <div class="space-y-space-xs pt-space-xs">
+          <a class="flex items-center gap-space-sm p-space-sm bg-surface-container-low rounded-xl hover:bg-surface-container transition-colors group" href="tel:08146500441">
+            <div class="w-12 h-12 rounded-lg bg-primary-container text-on-primary flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-[22px] text-secondary-fixed">call</span>
+            </div>
+            <div class="min-w-0">
+              <span class="font-caption text-caption text-on-surface-variant block uppercase">Customer Care</span>
+              <span class="font-title-md text-title-md text-primary font-bold">08146500441</span>
+            </div>
+            <span class="material-symbols-outlined text-on-surface-variant ml-auto group-hover:translate-x-1 transition-transform">arrow_forward</span>
+          </a>
+          <a class="flex items-center gap-space-sm p-space-sm bg-surface-container-low rounded-xl hover:bg-surface-container transition-colors group" href="https://wa.me/2349074026801" rel="noopener noreferrer" target="_blank">
+            <div class="w-12 h-12 rounded-lg bg-secondary text-on-secondary flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-[22px]">chat</span>
+            </div>
+            <div class="min-w-0">
+              <span class="font-caption text-caption text-on-surface-variant block uppercase">WhatsApp Admissions Desk</span>
+              <span class="font-title-md text-title-md text-primary font-bold">0907 402 6801</span>
+              <span class="font-caption text-[11px] text-on-surface-variant block">or 09015117584</span>
+            </div>
+            <span class="material-symbols-outlined text-on-surface-variant ml-auto group-hover:translate-x-1 transition-transform">arrow_forward</span>
+          </a>
+          <a class="flex items-center gap-space-sm p-space-sm bg-surface-container-low rounded-xl hover:bg-surface-container transition-colors group" href="mailto:rootandriseinstitute@gmail.com">
+            <div class="w-12 h-12 rounded-lg bg-primary text-on-primary flex items-center justify-center shrink-0">
+              <span class="material-symbols-outlined text-[22px] text-secondary-fixed">mail</span>
+            </div>
+            <div class="min-w-0">
+              <span class="font-caption text-caption text-on-surface-variant block uppercase">Official Registry Email</span>
+              <span class="font-label-md text-label-md text-primary font-bold truncate block">rootandriseinstitute@gmail.com</span>
+            </div>
+            <span class="material-symbols-outlined text-on-surface-variant ml-auto group-hover:translate-x-1 transition-transform">arrow_forward</span>
+          </a>
+        </div>
+        <div class="p-space-md bg-surface-container rounded-xl flex items-center gap-space-sm">
+          <span class="material-symbols-outlined text-secondary text-[32px]">military_tech</span>
+          <span class="font-body-sm text-body-sm text-on-surface-variant">
+            Registered under statutory enterprise development and vocational excellence frameworks.
+          </span>
+        </div>
+      </div>
+      <div class="lg:col-span-7 bg-surface-container-low rounded-2xl p-space-lg md:p-space-xl shadow-md">
+        <form class="flex flex-col gap-space-md" id="candidate-application-form">
+          <div class="flex items-center justify-between pb-space-xs">
+            <div>
+              <h3 class="font-headline-sm text-headline-sm text-primary">Candidate Application Intake</h3>
+              <span class="font-caption text-caption text-on-surface-variant">Registration Fee: <%= registrationFee %> — pay securely online via Paystack</span>
+            </div>
+            <span class="font-label-caps text-label-caps px-space-xs py-space-3xs bg-secondary-fixed text-on-secondary-fixed rounded uppercase font-bold">Step 1 of 2</span>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
+            <div class="flex flex-col gap-space-3xs">
+              <label class="font-label-md text-label-md text-primary" for="applicant-name">Full Legal Name *</label>
+              <input class="w-full px-space-sm py-space-xs rounded bg-surface-container-lowest text-on-surface placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest shadow-sm" id="applicant-name" placeholder="e.g. Adebayo Omotola" required type="text" />
+            </div>
+            <div class="flex flex-col gap-space-3xs">
+              <label class="font-label-md text-label-md text-primary" for="applicant-email">Email Address *</label>
+              <input class="w-full px-space-sm py-space-xs rounded bg-surface-container-lowest text-on-surface placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest shadow-sm" id="applicant-email" placeholder="name@domain.com" required type="email" />
+            </div>
+          </div>
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-space-md">
+            <div class="flex flex-col gap-space-3xs">
+              <label class="font-label-md text-label-md text-primary" for="applicant-phone">WhatsApp Active Phone *</label>
+              <input class="w-full px-space-sm py-space-xs rounded bg-surface-container-lowest text-on-surface placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest shadow-sm" id="applicant-phone" placeholder="080 0000 0000" required type="tel" />
+            </div>
+            <div class="flex flex-col gap-space-3xs">
+              <label class="font-label-md text-label-md text-primary" for="applicant-age">Candidate Age (16 – 30) *</label>
+              <input class="w-full px-space-sm py-space-xs rounded bg-surface-container-lowest text-on-surface placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest shadow-sm" id="applicant-age" max="30" min="16" placeholder="19" required type="number" />
+            </div>
+          </div>
+          <div class="flex flex-col gap-space-3xs">
+            <label class="font-label-md text-label-md text-primary" for="applicant-craft">Primary Craft Discipline *</label>
+            <select class="w-full px-space-sm py-space-xs rounded bg-surface-container-lowest text-on-surface focus:outline-none shadow-sm font-body-md" id="applicant-craft" required>
+              <option disabled selected value="">Select your prospective craft specialty...</option>
+              <option value="fashion">Fashion &amp; Textile Design</option>
+              <option value="leather">Leather &amp; Product Craft</option>
+              <option value="furniture">Furniture &amp; Wood Craft</option>
+              <option value="decorative">Bead, Wire &amp; Decorative Craft</option>
+              <option value="jewellery">Jewellery &amp; Accessories Design</option>
+              <option value="arts">Creative Arts, Photography &amp; Ceramics</option>
+              <option value="culinary">Culinary Arts &amp; Hospitality</option>
+              <option value="beauty">Beauty &amp; Personal Care</option>
+            </select>
+          </div>
+          <div class="p-space-sm bg-surface-container-lowest rounded-xl flex items-start gap-space-sm">
+            <input class="mt-1 w-4 h-4 rounded text-primary focus:ring-secondary accent-primary" id="scholarship-opt-in" type="checkbox" />
+            <label class="cursor-pointer" for="scholarship-opt-in">
+              <span class="font-label-md text-label-md text-primary block">I wish to be evaluated for Merit &amp; Need-Based Scholarships</span>
+              <span class="font-caption text-caption text-on-surface-variant block">Candidates will submit an additional brief portfolio or aptitude test during stage 2.</span>
+            </label>
+          </div>
+          <div class="flex flex-col gap-space-3xs">
+            <label class="font-label-md text-label-md text-primary" for="applicant-statement">Brief Statement of Intent &amp; Passion *</label>
+            <textarea class="w-full px-space-sm py-space-xs rounded bg-surface-container-lowest text-on-surface placeholder:text-outline focus:outline-none focus:bg-surface-container-lowest shadow-sm font-body-md" id="applicant-statement" placeholder="Tell us what you want to create and what drives your craft passion..." required rows="3"></textarea>
+          </div>
+          <div id="application-error-notice" class="hidden p-space-sm bg-error-container text-on-error-container rounded-lg text-body-sm font-body-sm"></div>
+          <div class="pt-space-2xs flex flex-col sm:flex-row items-center justify-between gap-space-sm">
+            <div class="flex items-center gap-space-2xs text-secondary font-caption text-caption">
+              <span class="material-symbols-outlined text-[16px]">lock</span>
+              <span>Payments are processed securely by Paystack.</span>
+            </div>
+            <button class="w-full sm:w-auto px-space-xl py-space-sm bg-primary-container text-on-primary font-title-md text-title-md rounded-lg shadow-md hover:bg-primary transition-all flex items-center justify-center gap-space-xs disabled:opacity-60 disabled:cursor-not-allowed" id="submit-application-btn" type="submit">
+              <span id="submit-application-btn-label">Pay <%= registrationFee %> &amp; Submit</span>
+              <span class="material-symbols-outlined text-[20px]">payments</span>
+            </button>
+          </div>
+        </form>
+        <div class="hidden p-space-md bg-primary text-on-primary rounded-xl mt-space-md text-center" id="application-success-notice">
+          <span class="material-symbols-outlined text-secondary-fixed text-[36px] mb-space-2xs">check_circle</span>
+          <h4 class="font-headline-sm text-headline-sm text-secondary-fixed">Payment Received &amp; Application Registered</h4>
+          <p class="font-body-md text-body-md text-primary-fixed-dim mt-space-3xs">
+            Thank you for applying to the <%= cohort %> Cohort. Your registration fee has been confirmed — check your WhatsApp and email for your receipt and interview schedule.
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="w-full py-space-lg bg-surface-container-highest">
+  <div class="max-w-7xl mx-auto px-margin-page flex flex-col sm:flex-row items-center justify-between gap-space-md text-center sm:text-left">
+    <div class="flex items-center gap-space-sm">
+      <span class="material-symbols-outlined text-secondary text-[36px]">workspace_premium</span>
+      <div>
+        <span class="font-title-md text-title-md text-primary block">Root &amp; Rise Institute of Craft</span>
+        <span class="font-body-sm text-body-sm text-on-surface-variant">Accredited Center for Vocational Craft Mastery &amp; Enterprise Incubator</span>
+      </div>
+    </div>
+    <div class="flex items-center gap-space-sm">
+      <a class="px-space-sm py-space-2xs rounded bg-surface-container text-on-surface font-label-md text-label-md hover:bg-surface-variant transition-colors" href="#journey">4-Stage Journey</a>
+      <a class="px-space-sm py-space-2xs rounded bg-surface-container text-on-surface font-label-md text-label-md hover:bg-surface-variant transition-colors" href="#craft-pathways">Curriculum</a>
+      <a class="px-space-sm py-space-2xs rounded bg-primary-container text-on-primary font-label-md text-label-md hover:bg-primary transition-colors" href="#admissions-form">Apply Today</a>
+    </div>
+  </div>
+</section>
