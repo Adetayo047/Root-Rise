@@ -15,3 +15,14 @@ export const CRAFT_LABELS = {
   culinary: 'Culinary Arts & Hospitality',
   beauty: 'Beauty & Personal Care',
 };
+
+// Where a paid candidate is in the admissions process. Set by the admin
+// team from the dashboard; every new paid application starts at "new".
+export const ADMISSION_STAGES = {
+  new: 'New',
+  contacted: 'Contacted',
+  interview: 'Interview Scheduled',
+  admitted: 'Admitted',
+  waitlisted: 'Waitlisted',
+  declined: 'Declined',
+};

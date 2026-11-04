@@ -6,7 +6,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import ejs from 'ejs';
-import { COHORT, RESUMPTION_DATE, REGISTRATION_FEE_NAIRA } from '../src/config.js';
+import { COHORT, RESUMPTION_DATE, REGISTRATION_FEE_NAIRA, CRAFT_LABELS, ADMISSION_STAGES } from '../src/config.js';
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const distDir = path.join(root, 'dist');
@@ -20,5 +20,15 @@ const html = await ejs.renderFile(path.join(root, 'views', 'index.ejs'), {
   registrationFee: `₦${REGISTRATION_FEE_NAIRA.toLocaleString('en-NG')}`,
 });
 fs.writeFileSync(path.join(distDir, 'index.html'), html);
+
+// The admin page is only a shell — every bit of applicant data it shows is
+// fetched from /api/admin/*, which requires signing in.
+const adminHtml = await ejs.renderFile(path.join(root, 'views', 'admin.ejs'), {
+  cohort: COHORT,
+  crafts: CRAFT_LABELS,
+  stages: ADMISSION_STAGES,
+});
+fs.mkdirSync(path.join(distDir, 'admin'), { recursive: true });
+fs.writeFileSync(path.join(distDir, 'admin', 'index.html'), adminHtml);
 
 console.log('Built static site into dist/');

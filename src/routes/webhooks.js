@@ -1,15 +1,7 @@
 import * as store from '../lib/store.js';
 import { verifyTransaction, isSuccessfulPayment } from '../lib/paystack.js';
 import { notifyNewPaidApplication } from '../lib/mailer.js';
-
-function hexToBytes(hex) {
-  if (typeof hex !== 'string' || hex.length % 2 !== 0 || !/^[0-9a-f]*$/i.test(hex)) return null;
-  const bytes = new Uint8Array(hex.length / 2);
-  for (let i = 0; i < bytes.length; i++) {
-    bytes[i] = parseInt(hex.slice(i * 2, i * 2 + 2), 16);
-  }
-  return bytes;
-}
+import { hexToBytes } from '../lib/hex.js';
 
 // Paystack signs the raw body with HMAC-SHA512 using the secret key.
 // crypto.subtle.verify does the comparison in constant time.

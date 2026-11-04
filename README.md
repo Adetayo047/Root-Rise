@@ -40,6 +40,7 @@ In the Worker's **Settings → Variables and Secrets**, add:
 | `RESEND_API_KEY` | **Secret** | `re_...` |
 | `ADMISSIONS_NOTIFY_EMAIL` | Text | `rootandriseinstitute@gmail.com` |
 | `MAIL_FROM` | Text | optional — see email section |
+| `ADMIN_PASSWORD` | **Secret** | a long passphrase — see admin section |
 
 These are kept across deploys (`keep_vars` in `wrangler.jsonc`).
 
@@ -50,6 +51,32 @@ These are kept across deploys (`keep_vars` in `wrangler.jsonc`).
    Cloudflare gives you. Wait until the domain shows **Active**.
 3. Worker → **Settings → Domains & Routes → Add → Custom domain** → enter the
    domain (and `www.` too if you want it). HTTPS is set up automatically.
+
+## Admin dashboard
+
+`https://YOUR_DOMAIN/admin` — a password-protected dashboard for the
+admissions team:
+
+- Overview: paid applications, fees received, who still needs a first
+  call, admitted count, scholarship requests
+- Search by name/email/phone/reference; filter by payment status, admission
+  stage and craft
+- Open any application to see everything the candidate submitted, contact
+  them in one tap (WhatsApp / call / email), set their admission stage
+  (New → Contacted → Interview Scheduled → Admitted / Waitlisted / Declined)
+  and keep private notes
+- Export the current filtered list to CSV (opens in Excel / Google Sheets)
+
+**To turn it on:** add an `ADMIN_PASSWORD` **Secret** on the Worker
+(Settings → Variables and Secrets). Use a long passphrase — anyone with it
+can see every applicant's details. Everyone on the team shares that one
+password; sign-ins last 12 hours. Changing the password signs everyone out
+immediately.
+
+The admin API lives under `/api/admin/*` (`src/routes/admin.js`); the page
+itself (`views/admin.ejs`, `public/js/admin.js`) contains no applicant data
+and fetches everything after sign-in. Admission stages are listed in
+`src/config.js`.
 
 ## Local development
 
@@ -175,11 +202,14 @@ src/config.js                    Cohort, dates, fee, craft list
 src/worker.js                    Worker entry point — routes /api/*
 src/routes/applications.js       Application + payment API endpoints (browser-driven)
 src/routes/webhooks.js           Paystack webhook (server-to-server confirmation)
+src/routes/admin.js              Admin dashboard API (sign-in, list, update, CSV)
+src/lib/auth.js                  Admin password check + signed session cookie
 src/lib/paystack.js              Paystack API client (verify transaction)
 src/lib/mailer.js                Email notification (Resend)
 src/lib/store.js                 D1 storage for applications
 views/                           EJS templates
   index.ejs                      Page shell, assembles partials
+  admin.ejs                      Admin dashboard page (/admin)
   partials/                      head, header, hero, programmes, journey,
                                   pathways, curriculum, admissions, form, footer
 public/                          Static assets (CSS, JS, images)

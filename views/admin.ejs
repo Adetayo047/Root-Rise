@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta content="width=device-width, initial-scale=1.0" name="viewport" />
+<meta name="robots" content="noindex, nofollow" />
+<title>Admissions Dashboard | Root &amp; Rise</title>
+<link href="https://fonts.googleapis.com/css2?family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&family=Hanken+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+<link href="/css/style.css" rel="stylesheet" />
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="/js/tailwind-config.js"></script>
+<script>
+  window.ADMIN_CONFIG = <%- JSON.stringify({ cohort, crafts, stages }) %>;
+</script>
+</head>
+<body class="bg-surface font-body-md text-body-md text-on-surface antialiased">
+
+<!-- Sign in -->
+<div class="hidden min-h-screen flex items-center justify-center px-margin-page py-space-2xl" id="login-view">
+  <form class="w-full max-w-sm bg-surface-container-low rounded-2xl p-space-xl shadow-md flex flex-col gap-space-md" id="login-form">
+    <div class="flex items-center gap-space-xs">
+      <img alt="Root & Rise logo" class="h-10 w-auto object-contain" src="/images/logo.jpeg" />
+      <div class="flex flex-col">
+        <span class="font-headline-sm text-headline-sm text-primary leading-none">Root &amp; Rise</span>
+        <span class="font-label-caps text-label-caps text-secondary tracking-widest uppercase">Admissions Desk</span>
+      </div>
+    </div>
+    <div class="flex flex-col gap-space-3xs">
+      <label class="font-label-md text-label-md text-primary" for="admin-password">Admin password</label>
+      <input autocomplete="current-password" class="w-full px-space-sm py-space-xs rounded bg-surface-container-lowest text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary shadow-sm" id="admin-password" required type="password" />
+    </div>
+    <div class="hidden p-space-sm bg-error-container text-on-error-container rounded-lg font-body-sm text-body-sm" id="login-error"></div>
+    <button class="w-full px-space-lg py-space-sm bg-primary-container text-on-primary font-title-md text-title-md rounded-lg shadow-md hover:bg-primary transition-all disabled:opacity-60" id="login-btn" type="submit">Sign in</button>
+    <a class="font-caption text-caption text-on-surface-variant hover:text-primary text-center" href="/">← Back to website</a>
+  </form>
+</div>
+
+<!-- Dashboard -->
+<div class="hidden" id="dashboard-view">
+  <header class="sticky top-0 z-30 bg-surface/90 backdrop-blur-md shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
+    <div class="h-16 max-w-7xl mx-auto px-margin-page flex items-center justify-between gap-space-md">
+      <div class="flex items-center gap-space-xs min-w-0">
+        <img alt="" class="h-8 w-auto object-contain" src="/images/logo.jpeg" />
+        <div class="flex flex-col min-w-0">
+          <span class="font-headline-sm text-headline-sm text-primary tracking-tight leading-none truncate">Root &amp; Rise</span>
+          <span class="font-label-caps text-label-caps text-secondary tracking-widest uppercase truncate">Admissions Dashboard</span>
+        </div>
+      </div>
+      <div class="flex items-center gap-space-xs">
+        <a class="hidden sm:inline-flex items-center gap-space-3xs px-space-sm py-space-xs rounded-lg text-on-surface-variant font-label-md text-label-md hover:bg-surface-container-high transition-colors" href="/" target="_blank">
+          <span class="material-symbols-outlined text-[18px]">open_in_new</span> Website
+        </a>
+        <button class="inline-flex items-center gap-space-3xs px-space-sm py-space-xs rounded-lg bg-surface-container-high text-on-surface font-label-md text-label-md hover:bg-surface-variant transition-colors" id="logout-btn" type="button">
+          <span class="material-symbols-outlined text-[18px]">logout</span> Sign out
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <main class="max-w-7xl mx-auto px-margin-page py-space-xl flex flex-col gap-space-lg">
+    <div>
+      <span class="font-label-caps text-label-caps text-secondary uppercase tracking-widest">Cohort <%= cohort %></span>
+      <h1 class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg text-primary">Applications</h1>
+    </div>
+
+    <section class="grid grid-cols-2 lg:grid-cols-5 gap-space-sm" id="stats"></section>
+
+    <section class="bg-surface-container-low rounded-2xl p-space-md flex flex-col lg:flex-row gap-space-sm lg:items-end">
+      <div class="flex flex-col gap-space-3xs flex-1 min-w-0">
+        <label class="font-label-md text-label-md text-primary" for="filter-q">Search</label>
+        <div class="relative">
+          <span class="material-symbols-outlined text-[18px] text-outline absolute left-space-sm top-1/2 -translate-y-1/2">search</span>
+          <input class="w-full pl-space-2xl pr-space-sm py-space-xs rounded bg-surface-container-lowest text-on-surface placeholder:text-outline focus:outline-none focus:ring-2 focus:ring-secondary shadow-sm" id="filter-q" placeholder="Name, email, phone or reference" type="search" />
+        </div>
+      </div>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-space-sm lg:flex lg:gap-space-sm">
+        <div class="flex flex-col gap-space-3xs">
+          <label class="font-label-md text-label-md text-primary" for="filter-status">Payment</label>
+          <select class="px-space-sm py-space-xs rounded bg-surface-container-lowest text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary shadow-sm" id="filter-status">
+            <option value="paid">Paid</option>
+            <option value="pending">Unfinished payment</option>
+            <option value="failed">Failed</option>
+            <option value="all">All</option>
+          </select>
+        </div>
+        <div class="flex flex-col gap-space-3xs">
+          <label class="font-label-md text-label-md text-primary" for="filter-stage">Stage</label>
+          <select class="px-space-sm py-space-xs rounded bg-surface-container-lowest text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary shadow-sm" id="filter-stage">
+            <option value="">All stages</option>
+            <% Object.entries(stages).forEach(([value, label]) => { %>
+              <option value="<%= value %>"><%= label %></option>
+            <% }) %>
+          </select>
+        </div>
+        <div class="flex flex-col gap-space-3xs">
+          <label class="font-label-md text-label-md text-primary" for="filter-craft">Craft</label>
+          <select class="px-space-sm py-space-xs rounded bg-surface-container-lowest text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary shadow-sm" id="filter-craft">
+            <option value="">All crafts</option>
+            <% Object.entries(crafts).forEach(([value, label]) => { %>
+              <option value="<%= value %>"><%= label %></option>
+            <% }) %>
+          </select>
+        </div>
+      </div>
+      <a class="inline-flex items-center justify-center gap-space-2xs px-space-md py-space-xs rounded-lg bg-primary-container text-on-primary font-label-md text-label-md hover:bg-primary transition-all shadow-sm" href="/api/admin/applications.csv" id="export-btn">
+        <span class="material-symbols-outlined text-[18px]">download</span> Export CSV
+      </a>
+    </section>
+
+    <section>
+      <p class="font-caption text-caption text-on-surface-variant mb-space-xs" id="result-count"></p>
+      <!-- Desktop table -->
+      <div class="hidden md:block bg-surface-container-lowest rounded-2xl shadow-sm overflow-hidden">
+        <table class="w-full text-left">
+          <thead class="bg-surface-container-low">
+            <tr class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest">
+              <th class="px-space-md py-space-sm">Submitted</th>
+              <th class="px-space-md py-space-sm">Candidate</th>
+              <th class="px-space-md py-space-sm">Craft</th>
+              <th class="px-space-md py-space-sm">Phone</th>
+              <th class="px-space-md py-space-sm">Stage</th>
+              <th class="px-space-md py-space-sm text-center">Scholarship</th>
+            </tr>
+          </thead>
+          <tbody id="applications-table"></tbody>
+        </table>
+      </div>
+      <!-- Mobile cards -->
+      <div class="md:hidden flex flex-col gap-space-sm" id="applications-cards"></div>
+      <div class="hidden bg-surface-container-low rounded-2xl p-space-2xl text-center" id="empty-state">
+        <span class="material-symbols-outlined text-outline text-[40px]">inbox</span>
+        <p class="font-title-md text-title-md text-primary mt-space-2xs">No applications match</p>
+        <p class="font-body-sm text-body-sm text-on-surface-variant">Try a different search or filter.</p>
+      </div>
+    </section>
+  </main>
+</div>
+
+<!-- Application detail drawer -->
+<div class="hidden fixed inset-0 z-40" id="detail-panel">
+  <div class="absolute inset-0 bg-primary/40" data-close-detail></div>
+  <aside class="absolute right-0 top-0 h-full w-full max-w-xl bg-surface shadow-2xl overflow-y-auto" aria-modal="true" role="dialog">
+    <div class="sticky top-0 bg-surface/95 backdrop-blur-md px-space-lg py-space-md flex items-center justify-between gap-space-sm shadow-[0_1px_8px_rgba(0,0,0,0.04)]">
+      <span class="font-label-caps text-label-caps text-secondary uppercase tracking-widest">Application</span>
+      <button class="w-9 h-9 rounded-full hover:bg-surface-container-high flex items-center justify-center" data-close-detail type="button" aria-label="Close">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+    <div class="px-space-lg py-space-lg" id="detail-content"></div>
+  </aside>
+</div>
+
+<div class="hidden fixed bottom-space-lg left-1/2 -translate-x-1/2 z-50 px-space-md py-space-sm rounded-lg bg-primary text-on-primary font-label-md text-label-md shadow-lg" id="toast"></div>
+
+<script src="/js/admin.js"></script>
+</body>
+</html>

@@ -19,9 +19,20 @@ const SCHEMA = `
     verified_at TEXT,
     verified_via TEXT,
     notified_at TEXT,
-    created_at TEXT NOT NULL
+    created_at TEXT NOT NULL,
+    admission_stage TEXT NOT NULL DEFAULT 'new',
+    admin_notes TEXT,
+    stage_updated_at TEXT
   )
 `;
+
+// Columns added after the table first shipped. A database created before
+// they existed gets them added on first use (see ensureSchema).
+const ADDED_COLUMNS = {
+  admission_stage: "TEXT NOT NULL DEFAULT 'new'",
+  admin_notes: 'TEXT',
+  stage_updated_at: 'TEXT',
+};
 
 const COLUMNS = {
   reference: 'reference',
@@ -41,14 +52,28 @@ const COLUMNS = {
   verifiedVia: 'verified_via',
   notifiedAt: 'notified_at',
   createdAt: 'created_at',
+  admissionStage: 'admission_stage',
+  adminNotes: 'admin_notes',
+  stageUpdatedAt: 'stage_updated_at',
 };
 
-// Creates the table the first time each Worker instance touches the
-// database, so a fresh D1 database needs no manual setup step.
+async function migrate(db) {
+  await db.prepare(SCHEMA).run();
+  const { results } = await db.prepare('PRAGMA table_info(applications)').all();
+  const existing = new Set(results.map((column) => column.name));
+  for (const [column, definition] of Object.entries(ADDED_COLUMNS)) {
+    if (!existing.has(column)) {
+      await db.prepare(`ALTER TABLE applications ADD COLUMN ${column} ${definition}`).run();
+    }
+  }
+}
+
+// Creates (or upgrades) the table the first time each Worker instance
+// touches the database, so a fresh D1 database needs no manual setup step.
 let schemaReady = null;
 function ensureSchema(db) {
   if (!schemaReady) {
-    schemaReady = db.prepare(SCHEMA).run().catch((err) => {
+    schemaReady = migrate(db).catch((err) => {
       schemaReady = null;
       throw err;
     });
@@ -114,4 +139,58 @@ export async function claimNotification(db, reference) {
     .bind(new Date().toISOString(), reference)
     .run();
   return result.meta.changes === 1;
+}
+
+/**
+ * Applications for the admin dashboard, newest first. Every filter is
+ * optional; `status: 'all'` (or none) includes unpaid ones too.
+ */
+export async function listApplications(db, { status, stage, craft, q } = {}) {
+  await ensureSchema(db);
+  const where = [];
+  const params = [];
+  if (status && status !== 'all') {
+    where.push('status = ?');
+    params.push(status);
+  }
+  if (stage) {
+    where.push('admission_stage = ?');
+    params.push(stage);
+  }
+  if (craft) {
+    where.push('craft = ?');
+    params.push(craft);
+  }
+  if (q) {
+    where.push('(name LIKE ? OR email LIKE ? OR phone LIKE ? OR reference LIKE ?)');
+    const like = `%${q}%`;
+    params.push(like, like, like, like);
+  }
+  const sql = `SELECT * FROM applications ${where.length ? `WHERE ${where.join(' AND ')}` : ''} ORDER BY created_at DESC LIMIT 2000`;
+  const { results } = await db.prepare(sql).bind(...params).all();
+  return results.map(fromRow);
+}
+
+export async function getSummary(db) {
+  await ensureSchema(db);
+  const totals = await db
+    .prepare(
+      `SELECT
+         COUNT(*) AS total,
+         COALESCE(SUM(status = 'paid'), 0) AS paid,
+         COALESCE(SUM(status = 'pending'), 0) AS pending,
+         COALESCE(SUM(status = 'failed'), 0) AS failed,
+         COALESCE(SUM(CASE WHEN status = 'paid' THEN amount_kobo ELSE 0 END), 0) AS revenueKobo,
+         COALESCE(SUM(status = 'paid' AND admission_stage = 'new'), 0) AS awaitingContact,
+         COALESCE(SUM(status = 'paid' AND scholarship_opt_in = 1), 0) AS scholarshipRequests
+       FROM applications`
+    )
+    .first();
+  const { results } = await db
+    .prepare(`SELECT admission_stage AS stage, COUNT(*) AS count FROM applications WHERE status = 'paid' GROUP BY admission_stage`)
+    .all();
+  return {
+    ...totals,
+    byStage: Object.fromEntries(results.map((row) => [row.stage, row.count])),
+  };
 }
