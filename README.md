@@ -22,7 +22,7 @@ to `main` deploys automatically. In the Worker's **Settings → Build**:
 - **Deploy command:** `npx wrangler deploy`
 
 The Worker name in the dashboard must match `"name"` in `wrangler.jsonc`
-(`rootandrise-site`).
+(`root-rise`).
 
 The D1 database is created automatically on the first deploy — no manual
 step. You can browse applications in the dashboard under

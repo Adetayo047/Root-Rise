@@ -1,7 +1,7 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
   // Must match the Worker's name in the Cloudflare dashboard.
-  "name": "rootandrise-site",
+  "name": "root-rise",
   "main": "src/worker.js",
   "compatibility_date": "2026-11-01",
 
