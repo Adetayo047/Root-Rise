@@ -1,0 +1,38 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  // Must match the Worker's name in the Cloudflare dashboard.
+  "name": "rootandrise-site",
+  "main": "src/worker.js",
+  "compatibility_date": "2026-11-01",
+
+  // Renders views/ + public/ into dist/ before every deploy and dev run.
+  "build": {
+    "command": "npm run build",
+    "watch_dir": ["views", "public", "src"]
+  },
+
+  // The page and its CSS/JS/images are served straight from dist/; only
+  // /api/* runs the Worker code.
+  "assets": {
+    "directory": "./dist",
+    "binding": "ASSETS",
+    "run_worker_first": ["/api/*"]
+  },
+
+  // No database_id needed: the first deploy creates the D1 database
+  // automatically and later deploys keep using it.
+  "d1_databases": [
+    {
+      "binding": "DB",
+      "database_name": "rootandrise-applications"
+    }
+  ],
+
+  // Keep the variables set in the dashboard (Settings → Variables and
+  // Secrets) instead of wiping them on every deploy.
+  "keep_vars": true,
+
+  "observability": {
+    "enabled": true
+  }
+}

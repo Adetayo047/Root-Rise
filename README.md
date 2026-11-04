@@ -1,56 +1,96 @@
 # Root & Rise Institute — Landing Page
 
-Express + EJS site for Root & Rise Institute of Craft, with a Paystack-powered
-application/registration form.
+Landing page for Root & Rise Institute of Craft, with a Paystack-powered
+application/registration form. Runs on **Cloudflare Workers**:
 
-## Setup
+- The page itself is rendered from the EJS templates in `views/` into plain
+  HTML at deploy time (`npm run build` → `dist/`) and served as static files.
+- The `/api/*` routes (application form, payment verify, Paystack webhook)
+  run as a Worker (`src/`).
+- Applications are stored in **Cloudflare D1** (a SQLite database).
+- Notification emails are sent through **Resend**.
+
+Cohort, resumption date and registration fee live in `src/config.js` —
+change them there and redeploy.
+
+## Deploying on Cloudflare
+
+The Worker is connected to this GitHub repo (Workers Builds), so every push
+to `main` deploys automatically. In the Worker's **Settings → Build**:
+
+- **Build command:** leave empty (Wrangler runs `npm run build` itself)
+- **Deploy command:** `npx wrangler deploy`
+
+The Worker name in the dashboard must match `"name"` in `wrangler.jsonc`
+(`rootandrise-site`).
+
+The D1 database is created automatically on the first deploy — no manual
+step. You can browse applications in the dashboard under
+**Storage & Databases → D1 → rootandrise-applications → Console**, e.g.
+`SELECT * FROM applications WHERE status = 'paid' ORDER BY paid_at DESC;`
+
+### Variables and secrets
+
+In the Worker's **Settings → Variables and Secrets**, add:
+
+| Name | Type | Value |
+| --- | --- | --- |
+| `PAYSTACK_PUBLIC_KEY` | Text | `pk_test_...` / `pk_live_...` |
+| `PAYSTACK_SECRET_KEY` | **Secret** | `sk_test_...` / `sk_live_...` |
+| `RESEND_API_KEY` | **Secret** | `re_...` |
+| `ADMISSIONS_NOTIFY_EMAIL` | Text | `rootandriseinstitute@gmail.com` |
+| `MAIL_FROM` | Text | optional — see email section |
+
+These are kept across deploys (`keep_vars` in `wrangler.jsonc`).
+
+### Custom domain
+
+1. Cloudflare dashboard → **Add a site** → enter your domain.
+2. At your domain registrar, replace the nameservers with the two
+   Cloudflare gives you. Wait until the domain shows **Active**.
+3. Worker → **Settings → Domains & Routes → Add → Custom domain** → enter the
+   domain (and `www.` too if you want it). HTTPS is set up automatically.
+
+## Local development
 
 ```bash
 npm install
-cp .env.example .env   # then fill in your real Paystack + email keys
-npm start               # or: npm run dev (auto-restarts on file changes)
+cp .env.example .dev.vars   # then fill in your test keys
+npm run dev                 # http://localhost:8787
 ```
 
-Open http://localhost:3000
+`npm run dev` uses a local copy of D1, so test applications don't touch the
+live database.
 
 ## Paystack payment setup
 
 1. Create a Paystack account: https://dashboard.paystack.com/#/signup
 2. Grab your **test** API keys from
    https://dashboard.paystack.com/#/settings/developer
-3. Put them in `.env`:
-   ```
-   PAYSTACK_PUBLIC_KEY=pk_test_...
-   PAYSTACK_SECRET_KEY=sk_test_...
-   ```
-4. Restart the server. Submitting the application form now opens a real
-   Paystack checkout popup for the ₦20,000 registration fee.
-5. Use a [Paystack test card](https://paystack.com/docs/payments/test-payments/)
+3. Add them as `PAYSTACK_PUBLIC_KEY` / `PAYSTACK_SECRET_KEY` (see table
+   above). Submitting the application form now opens a real Paystack
+   checkout popup for the registration fee.
+4. Use a [Paystack test card](https://paystack.com/docs/payments/test-payments/)
    to pay in test mode, e.g. `4084 0840 8408 4081`, any future expiry, CVV `408`, PIN `0000`, OTP `123456`.
-6. When you're ready to accept real payments, swap in your **live** keys
+5. When you're ready to accept real payments, swap in your **live** keys
    (`pk_live_...` / `sk_live_...`) from the same dashboard page.
 
-**Never commit `.env`** — it's gitignored. Only `.env.example` (with no real
-keys) is checked in.
+**Never commit `.env` or `.dev.vars`** — both are gitignored.
 
 ## How the payment flow works
 
 1. Candidate fills the form → browser `POST /api/applications`.
-2. Server validates the fields, generates a unique reference, and stores a
-   `pending` record in `data/applications.json`.
+2. The Worker validates the fields, generates a unique reference, and stores
+   a `pending` record in D1.
 3. Browser opens the Paystack popup (Paystack Inline) with that reference.
 4. After the popup reports success, the browser calls
    `POST /api/applications/:reference/verify`.
-5. The server independently re-verifies the transaction directly with
+5. The Worker independently re-verifies the transaction directly with
    Paystack's API (`GET /transaction/verify/:reference`) using the secret
    key — the client's own "it worked" message is never trusted on its own.
 6. Only once Paystack confirms `status: success`, correct amount, and NGN
-   currency does the server mark the record `paid` and the page show the
+   currency does the Worker mark the record `paid` and the page show the
    success notice.
-
-Application records (including payment status) live in
-`data/applications.json` — a simple gitignored JSON file, fine for getting
-started. Move this to a real database before you have meaningful volume.
 
 ## Webhook (reliable payment confirmation)
 
@@ -66,61 +106,39 @@ anything is trusted — requests that don't match are rejected with 401 and
 ignored. Once verified, it re-checks the transaction directly with
 Paystack's API (same as the browser path) before marking a record `paid`.
 
-**To activate it:**
+**To activate it:** in the Paystack dashboard, go to
+[Settings → API Keys & Webhooks](https://dashboard.paystack.com/#/settings/developer)
+and set the webhook URL to `https://YOUR_DOMAIN/api/webhooks/paystack`
+(the `*.workers.dev` URL works too until your domain is connected). No extra
+keys needed — it reuses `PAYSTACK_SECRET_KEY`.
 
-1. In the Paystack dashboard, go to
-   [Settings → API Keys & Webhooks](https://dashboard.paystack.com/#/settings/developer)
-2. Set the webhook URL to `https://YOUR_DOMAIN/api/webhooks/paystack`
-   (must be a real public HTTPS URL — Paystack can't reach `localhost`)
-3. That's it — no extra keys needed, it reuses `PAYSTACK_SECRET_KEY` from `.env`
-
-**To test locally before you have a real domain**, tunnel your dev server
-with [ngrok](https://ngrok.com/) (`ngrok http 3000`) and use the printed
-`https://*.ngrok-free.app` URL as the webhook URL above. Paystack's
-dashboard also has a "Send Test Webhook" button for a quick sanity check
-once a URL is configured.
-
-Both confirmation paths (browser verify + webhook) write to the same
-`data/applications.json` record and both check `status === 'paid'` before
-doing anything, so it's safe for either one — or both — to fire for the
-same payment.
+Both confirmation paths write to the same D1 record and both check
+`status === 'paid'` before doing anything, so it's safe for either one — or
+both — to fire for the same payment.
 
 ## Who gets notified when someone applies
 
 The moment a payment is confirmed (by either path above), an email is sent
 to `ADMISSIONS_NOTIFY_EMAIL` with the candidate's full details — name,
 email, phone, age, craft discipline, scholarship interest, their statement,
-and the payment reference/amount/channel. A tiny in-file "claim" guards
-against sending it twice if both the browser and the webhook confirm the
-same payment.
+and the payment reference/amount/channel. An atomic "claim" in the database
+guards against sending it twice if both the browser and the webhook confirm
+the same payment.
 
 **To set up the email:**
 
-1. Turn on 2-Step Verification on the sending Gmail account (Gmail requires
-   this before it'll issue App Passwords):
-   https://myaccount.google.com/security
-2. Generate an App Password:
-   https://myaccount.google.com/apppasswords — choose "Mail" as the app,
-   any device name, and copy the 16-character password it gives you (spaces
-   don't matter, you can paste it with or without them).
-3. Put it in `.env`:
-   ```
-   SMTP_USER=rootandriseinstitute@gmail.com
-   SMTP_APP_PASSWORD=the16charapppassword
-   ADMISSIONS_NOTIFY_EMAIL=rootandriseinstitute@gmail.com
-   ```
-   (`ADMISSIONS_NOTIFY_EMAIL` can be a different address than `SMTP_USER` if
-   you want applications to land somewhere other than the sending account —
-   or even several addresses, comma-separated.)
-4. Restart the server. Watch the terminal on startup — it'll warn you if
-   these still look like placeholders.
-
-**This is App Passwords, not OAuth** — simplest path for a single mailbox
-sending a moderate volume of notification emails. If Root & Rise outgrows
-this (very high volume, need deliverability analytics, multiple sending
-domains), switch to a transactional service like Resend or SendGrid instead
-— ask and I'll swap it in; `lib/mailer.js` is the only file that would need
-to change.
+1. Sign up at https://resend.com — use `rootandriseinstitute@gmail.com`.
+2. Create an API key at https://resend.com/api-keys and add it as the
+   `RESEND_API_KEY` secret.
+3. Until you verify a domain, Resend only sends from `onboarding@resend.dev`
+   **to the email address you signed up with** — which is enough if
+   notifications go to `rootandriseinstitute@gmail.com`.
+4. Once your domain is on Cloudflare, add it under
+   https://resend.com/domains (Resend can add the DNS records to Cloudflare
+   for you), then set `MAIL_FROM`, e.g.
+   `Root & Rise Admissions <admissions@yourdomain.com>`. After that you can
+   send to any address, including several comma-separated ones in
+   `ADMISSIONS_NOTIFY_EMAIL`.
 
 ### WhatsApp notifications — not yet possible with what you have
 
@@ -151,13 +169,15 @@ your phone anyway via the Gmail app.
 ## Project structure
 
 ```
-server.js                        Express app entry point
-routes/applications.js           Application + payment API endpoints (browser-driven)
-routes/webhooks.js               Paystack webhook (server-to-server confirmation)
-lib/paystack.js                  Paystack API client (verify transaction)
-lib/mailer.js                    Email notification (Gmail SMTP via Nodemailer)
-lib/store.js                     JSON-file storage for applications
-data/applications.json           Application records (gitignored)
+wrangler.jsonc                   Cloudflare config (Worker, static assets, D1)
+scripts/build.js                 Renders views/ + public/ into dist/
+src/config.js                    Cohort, dates, fee, craft list
+src/worker.js                    Worker entry point — routes /api/*
+src/routes/applications.js       Application + payment API endpoints (browser-driven)
+src/routes/webhooks.js           Paystack webhook (server-to-server confirmation)
+src/lib/paystack.js              Paystack API client (verify transaction)
+src/lib/mailer.js                Email notification (Resend)
+src/lib/store.js                 D1 storage for applications
 views/                           EJS templates
   index.ejs                      Page shell, assembles partials
   partials/                      head, header, hero, programmes, journey,

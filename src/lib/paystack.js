@@ -1,22 +1,18 @@
 const PAYSTACK_BASE_URL = 'https://api.paystack.co';
 
-function getSecretKey() {
-  const key = process.env.PAYSTACK_SECRET_KEY;
-  if (!key) {
-    throw new Error('PAYSTACK_SECRET_KEY is not set. Add it to your .env file.');
-  }
-  return key;
-}
-
 /**
  * Verifies a transaction reference directly with Paystack's servers.
  * Never trust a client-reported "payment succeeded" without this check —
  * it's the only way to confirm money actually moved.
  */
-async function verifyTransaction(reference) {
+export async function verifyTransaction(env, reference) {
+  if (!env.PAYSTACK_SECRET_KEY) {
+    throw new Error('PAYSTACK_SECRET_KEY is not set. Add it as a secret on the Worker.');
+  }
+
   const res = await fetch(`${PAYSTACK_BASE_URL}/transaction/verify/${encodeURIComponent(reference)}`, {
     headers: {
-      Authorization: `Bearer ${getSecretKey()}`,
+      Authorization: `Bearer ${env.PAYSTACK_SECRET_KEY}`,
     },
   });
 
@@ -30,4 +26,14 @@ async function verifyTransaction(reference) {
   return body.data; // { status, amount, currency, reference, customer, paid_at, channel, ... }
 }
 
-module.exports = { verifyTransaction };
+/**
+ * True only when Paystack says the charge succeeded for exactly the amount
+ * and currency this application was created with.
+ */
+export function isSuccessfulPayment(transaction, application) {
+  return (
+    transaction.status === 'success' &&
+    transaction.currency === 'NGN' &&
+    transaction.amount === application.amountKobo
+  );
+}

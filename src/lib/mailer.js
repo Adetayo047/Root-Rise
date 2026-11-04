@@ -1,35 +1,9 @@
-const nodemailer = require('nodemailer');
+import { CRAFT_LABELS } from '../config.js';
 
-let transporter = null;
-
-function getTransporter() {
-  if (transporter) return transporter;
-
-  const user = process.env.SMTP_USER;
-  const pass = process.env.SMTP_APP_PASSWORD;
-
-  if (!user || !pass) {
-    throw new Error('SMTP_USER / SMTP_APP_PASSWORD are not set in .env — cannot send email.');
-  }
-
-  transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: { user, pass },
-  });
-
-  return transporter;
-}
-
-const CRAFT_LABELS = {
-  fashion: 'Fashion & Textile Design',
-  leather: 'Leather & Product Craft',
-  furniture: 'Furniture & Wood Craft',
-  decorative: 'Bead, Wire & Decorative Craft',
-  jewellery: 'Jewellery & Accessories Design',
-  arts: 'Creative Arts, Photography & Ceramics',
-  culinary: 'Culinary Arts & Hospitality',
-  beauty: 'Beauty & Personal Care',
-};
+// Sends through Resend's HTTP API (https://resend.com). Workers can't open
+// the SMTP connection Gmail needs, but they can make plain HTTPS requests.
+const RESEND_URL = 'https://api.resend.com/emails';
+const DEFAULT_FROM = 'Root & Rise Institute — Admissions <onboarding@resend.dev>';
 
 /**
  * Notifies the admissions team by email that a candidate has paid and
@@ -37,10 +11,17 @@ const CRAFT_LABELS = {
  * transitions to status "paid" — never on every webhook retry or duplicate
  * verify call (callers are responsible for that guard).
  */
-async function notifyNewPaidApplication(application) {
-  const to = process.env.ADMISSIONS_NOTIFY_EMAIL || process.env.SMTP_USER;
-  if (!to) {
-    console.warn('No ADMISSIONS_NOTIFY_EMAIL / SMTP_USER configured — skipping application notification email.');
+export async function notifyNewPaidApplication(env, application) {
+  if (!env.RESEND_API_KEY) {
+    console.warn('RESEND_API_KEY is not set — skipping application notification email.');
+    return;
+  }
+  const to = (env.ADMISSIONS_NOTIFY_EMAIL || '')
+    .split(',')
+    .map((address) => address.trim())
+    .filter(Boolean);
+  if (!to.length) {
+    console.warn('No ADMISSIONS_NOTIFY_EMAIL configured — skipping application notification email.');
     return;
   }
 
@@ -87,17 +68,26 @@ async function notifyNewPaidApplication(application) {
     </table>
   `;
 
-  await getTransporter().sendMail({
-    from: `"Root & Rise Institute — Admissions" <${process.env.SMTP_USER}>`,
-    to,
-    subject: `New Paid Application — ${application.name} (${craftLabel})`,
-    text,
-    html,
+  const res = await fetch(RESEND_URL, {
+    method: 'POST',
+    headers: {
+      Authorization: `Bearer ${env.RESEND_API_KEY}`,
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({
+      from: env.MAIL_FROM || DEFAULT_FROM,
+      to,
+      subject: `New Paid Application — ${application.name} (${craftLabel})`,
+      text,
+      html,
+    }),
   });
+
+  if (!res.ok) {
+    throw new Error(`Resend returned ${res.status}: ${await res.text()}`);
+  }
 }
 
 function escapeHtml(str) {
   return String(str).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }
-
-module.exports = { notifyNewPaidApplication };
