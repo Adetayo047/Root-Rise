@@ -94,9 +94,9 @@
           </select>
         </div>
         <div class="flex flex-col gap-space-3xs">
-          <label class="font-label-md text-label-md text-primary" for="filter-craft">Craft</label>
+          <label class="font-label-md text-label-md text-primary" for="filter-craft">School</label>
           <select class="px-space-sm py-space-xs rounded bg-surface-container-lowest text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary shadow-sm" id="filter-craft">
-            <option value="">All crafts</option>
+            <option value="">All schools</option>
             <% Object.entries(crafts).forEach(([value, label]) => { %>
               <option value="<%= value %>"><%= label %></option>
             <% }) %>
@@ -117,7 +117,7 @@
             <tr class="font-label-caps text-label-caps text-on-surface-variant uppercase tracking-widest">
               <th class="px-space-md py-space-sm">Submitted</th>
               <th class="px-space-md py-space-sm">Candidate</th>
-              <th class="px-space-md py-space-sm">Craft</th>
+              <th class="px-space-md py-space-sm">School</th>
               <th class="px-space-md py-space-sm">Phone</th>
               <th class="px-space-md py-space-sm">Stage</th>
               <th class="px-space-md py-space-sm text-center">Scholarship</th>

@@ -2,34 +2,23 @@
   <div class="max-w-7xl mx-auto px-margin-page">
     <div class="flex flex-col md:flex-row md:items-end justify-between mb-space-2xl gap-space-md">
       <div>
-        <span class="font-label-caps text-label-caps text-secondary uppercase tracking-widest block mb-space-2xs">Dedicated Faculties</span>
-        <h2 class="font-headline-lg text-headline-lg text-primary">Vocational Craft Disciplines</h2>
+        <span class="font-label-caps text-label-caps text-secondary uppercase tracking-widest block mb-space-2xs">Craft &bull; Creativity &bull; Enterprise</span>
+        <h2 class="font-headline-lg text-headline-lg text-primary">Our Schools</h2>
       </div>
       <p class="font-body-md text-body-md text-on-surface-variant max-w-md">
-        Each craft pathway is led by accredited master artisans with high-spec workshop machinery and contemporary design integration.
+        <strong class="text-primary">Build the skill. Find your voice. Create your future.</strong>
+        <%= schools.length %> schools, each with hands-on programmes led by experienced practitioners.
       </p>
     </div>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-space-md">
-      <% const courses = [
-        { icon: 'styler', title: 'Fashion & Textile Design', items: ['Fashion Designing', 'Textile & Fabric Design', 'Knitting & Fashion'] },
-        { icon: 'shopping_bag', title: 'Leather & Product Craft', items: ['Leatherworks', 'Shoe Making', 'Bag Making', 'Small Leather Accessories'] },
-        { icon: 'chair', title: 'Furniture & Wood Craft', items: ['Furniture Making', 'Woodworking', 'Wood Décor & Finishing'] },
-        { icon: 'auto_awesome', title: 'Bead, Wire & Decorative Craft', items: ['Bead Making', 'Wire Works', 'Fascinator Making', 'Umbrella Making', 'Decorative Craft'] },
-        { icon: 'diamond', title: 'Jewellery & Accessories Design', items: ['Jewellery Making', 'Fashion Accessories', 'Handmade Accessories', 'Product Finishing & Presentation'] },
-        { icon: 'palette', title: 'Creative Arts, Photography & Ceramics', items: ['Creative Art', 'Drawing & Painting', 'Photography', 'Art & Ceramics', 'Mixed-Media Art'] },
-        { icon: 'restaurant', title: 'Culinary Arts & Hospitality', items: ['Culinary Arts', 'Baking & Confectionery', 'Food Presentation', 'Catering', 'Hospitality & Event Service'] },
-        { icon: 'spa', title: 'Beauty & Personal Care', items: ['Hairdressing', 'Makeup Artistry', 'Gele Styling', 'Beauty Craft', 'Personal Grooming & Beauty Enterprise'] },
-      ]; %>
-      <% courses.forEach(course => { %>
-        <div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm hover:shadow-md transition-shadow flex flex-col justify-between">
-          <div>
-            <div class="w-12 h-12 rounded-lg bg-surface-container flex items-center justify-center text-primary mb-space-sm">
-              <span class="material-symbols-outlined text-[26px]"><%= course.icon %></span>
-            </div>
-            <h3 class="font-title-md text-title-md text-primary mb-space-xs"><%= course.title %></h3>
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-space-md">
+      <% schools.forEach(school => { %>
+        <div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm hover:shadow-md transition-shadow flex flex-col">
+          <div class="w-12 h-12 rounded-lg bg-surface-container flex items-center justify-center text-primary mb-space-sm">
+            <span class="material-symbols-outlined text-[26px]"><%= school.icon %></span>
           </div>
-          <div class="flex flex-wrap gap-space-3xs pt-space-xs">
-            <% course.items.forEach(item => { %>
+          <h3 class="font-title-md text-title-md text-primary mb-space-xs"><%= school.title %></h3>
+          <div class="flex flex-wrap gap-space-3xs pt-space-xs mt-auto">
+            <% school.programmes.forEach(item => { %>
               <span class="px-space-xs py-space-3xs rounded bg-surface-container-high text-on-surface font-caption text-[11px]"><%= item %></span>
             <% }) %>
           </div>

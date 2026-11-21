@@ -2,6 +2,10 @@ html, body {
   margin: 0;
   padding: 0;
 }
+/* Keep section headings clear of the fixed header when jumping to an anchor. */
+html {
+  scroll-padding-top: 6rem;
+}
 body {
   overscroll-behavior: none;
 }

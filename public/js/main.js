@@ -108,3 +108,22 @@
     }
   });
 })();
+
+// Mobile menu: the desktop nav is hidden below the xl breakpoint.
+(function () {
+  const toggle = document.getElementById('mobile-nav-toggle');
+  const nav = document.getElementById('mobile-nav');
+  const icon = document.getElementById('mobile-nav-icon');
+  if (!toggle || !nav) return;
+
+  function setOpen(open) {
+    nav.classList.toggle('hidden', !open);
+    toggle.setAttribute('aria-expanded', String(open));
+    toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+    icon.textContent = open ? 'close' : 'menu';
+  }
+
+  toggle.addEventListener('click', () => setOpen(nav.classList.contains('hidden')));
+  nav.addEventListener('click', (e) => { if (e.target.closest('a')) setOpen(false); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') setOpen(false); });
+})();

@@ -79,17 +79,12 @@
             </div>
           </div>
           <div class="flex flex-col gap-space-3xs">
-            <label class="font-label-md text-label-md text-primary" for="applicant-craft">Primary Craft Discipline *</label>
+            <label class="font-label-md text-label-md text-primary" for="applicant-craft">School *</label>
             <select class="w-full px-space-sm py-space-xs rounded bg-surface-container-lowest text-on-surface focus:outline-none shadow-sm font-body-md" id="applicant-craft" required>
-              <option disabled selected value="">Select your prospective craft specialty...</option>
-              <option value="fashion">Fashion &amp; Textile Design</option>
-              <option value="leather">Leather &amp; Product Craft</option>
-              <option value="furniture">Furniture &amp; Wood Craft</option>
-              <option value="decorative">Bead, Wire &amp; Decorative Craft</option>
-              <option value="jewellery">Jewellery &amp; Accessories Design</option>
-              <option value="arts">Creative Arts, Photography &amp; Ceramics</option>
-              <option value="culinary">Culinary Arts &amp; Hospitality</option>
-              <option value="beauty">Beauty &amp; Personal Care</option>
+              <option disabled selected value="">Select the school you want to join...</option>
+              <% schools.forEach(school => { %>
+                <option value="<%= school.key %>"><%= school.title %></option>
+              <% }) %>
             </select>
           </div>
           <div class="p-space-sm bg-surface-container-lowest rounded-xl flex items-start gap-space-sm">
@@ -133,7 +128,7 @@
       <span class="material-symbols-outlined text-secondary text-[36px]">workspace_premium</span>
       <div>
         <span class="font-title-md text-title-md text-primary block">Root &amp; Rise Institute of Craft</span>
-        <span class="font-body-sm text-body-sm text-on-surface-variant">Accredited Center for Vocational Craft Mastery &amp; Enterprise Incubator</span>
+        <span class="font-body-sm text-body-sm text-on-surface-variant">Centre for Craft, Creativity &amp; Enterprise</span>
       </div>
     </div>
     <div class="flex items-center gap-space-sm">

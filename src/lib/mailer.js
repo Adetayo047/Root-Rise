@@ -35,7 +35,7 @@ export async function notifyNewPaidApplication(env, application) {
     `Email: ${application.email}`,
     `Phone: ${application.phone}`,
     `Age: ${application.age}`,
-    `Craft Discipline: ${craftLabel}`,
+    `School: ${craftLabel}`,
     `Scholarship Evaluation Requested: ${application.scholarshipOptIn ? 'Yes' : 'No'}`,
     ``,
     `Statement of Intent:`,
@@ -55,7 +55,7 @@ export async function notifyNewPaidApplication(env, application) {
       <tr><td style="padding:4px 12px 4px 0;color:#555;">Email</td><td>${escapeHtml(application.email)}</td></tr>
       <tr><td style="padding:4px 12px 4px 0;color:#555;">Phone</td><td>${escapeHtml(application.phone)}</td></tr>
       <tr><td style="padding:4px 12px 4px 0;color:#555;">Age</td><td>${application.age}</td></tr>
-      <tr><td style="padding:4px 12px 4px 0;color:#555;">Craft Discipline</td><td>${escapeHtml(craftLabel)}</td></tr>
+      <tr><td style="padding:4px 12px 4px 0;color:#555;">School</td><td>${escapeHtml(craftLabel)}</td></tr>
       <tr><td style="padding:4px 12px 4px 0;color:#555;">Scholarship Evaluation</td><td>${application.scholarshipOptIn ? 'Yes' : 'No'}</td></tr>
     </table>
     <p style="font-family:sans-serif;font-size:14px;"><strong>Statement of Intent:</strong><br/>${escapeHtml(application.statement).replace(/\n/g, '<br/>')}</p>

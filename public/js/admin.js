@@ -248,7 +248,7 @@
           ${detailRow('Email', escapeHtml(a.email))}
           ${detailRow('WhatsApp phone', escapeHtml(a.phone))}
           ${detailRow('Age', escapeHtml(a.age))}
-          ${detailRow('Craft discipline', escapeHtml(crafts[a.craft] || a.craft))}
+          ${detailRow('School', escapeHtml(crafts[a.craft] || a.craft))}
           ${detailRow('Submitted', formatDate(a.createdAt))}
           ${detailRow('Scholarship evaluation', a.scholarshipOptIn ? 'Yes' : 'No')}
         </div>

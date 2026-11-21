@@ -2,7 +2,7 @@ import * as store from '../lib/store.js';
 import { verifyTransaction, isSuccessfulPayment } from '../lib/paystack.js';
 import { notifyNewPaidApplication } from '../lib/mailer.js';
 import { json, readJson } from '../lib/http.js';
-import { CRAFT_LABELS, REGISTRATION_FEE_KOBO } from '../config.js';
+import { SCHOOL_LABELS, REGISTRATION_FEE_KOBO } from '../config.js';
 
 const VERIFY_PATH = /^\/api\/applications\/([^/]+)\/verify$/;
 
@@ -42,7 +42,7 @@ async function createApplication(request, env) {
   if (!phone || typeof phone !== 'string' || !phone.trim()) errors.push('A WhatsApp phone number is required.');
   const ageNum = Number(age);
   if (!Number.isInteger(ageNum) || ageNum < 16 || ageNum > 30) errors.push('Candidate age must be between 16 and 30.');
-  if (!Object.hasOwn(CRAFT_LABELS, craft)) errors.push('Please select a valid craft discipline.');
+  if (!Object.hasOwn(SCHOOL_LABELS, craft)) errors.push('Please select a valid school.');
   if (!statement || typeof statement !== 'string' || !statement.trim()) errors.push('A brief statement of intent is required.');
 
   if (errors.length) {

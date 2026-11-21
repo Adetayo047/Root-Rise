@@ -1,4 +1,4 @@
-<footer class="w-full bg-primary text-on-primary mt-space-3xl">
+<footer class="w-full bg-primary text-on-primary mt-space-3xl" id="contact">
   <div class="max-w-7xl mx-auto px-margin-page pt-space-3xl pb-space-xl">
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-space-xl pb-space-2xl">
       <div class="lg:col-span-4 flex flex-col gap-space-sm">
@@ -9,13 +9,12 @@
         <p class="font-body-md text-body-md text-primary-fixed-dim max-w-sm">Dedicated to the rigor of vocational mastery, creative entrepreneurship, and artisanal distinction. Cultivating leaders across contemporary crafts and enterprise.</p>
       </div>
       <div class="lg:col-span-3 flex flex-col gap-space-xs">
-        <span class="font-label-caps text-label-caps text-secondary-fixed tracking-widest uppercase mb-space-xs">Curriculum &amp; Faculties</span>
+        <span class="font-label-caps text-label-caps text-secondary-fixed tracking-widest uppercase mb-space-xs">Our Schools</span>
         <ul class="flex flex-col gap-space-2xs font-body-sm text-body-sm text-primary-fixed-dim">
-          <li><a class="hover:text-on-primary transition-colors" href="#craft-pathways">Fashion &amp; Textile Design</a></li>
-          <li><a class="hover:text-on-primary transition-colors" href="#craft-pathways">Leather &amp; Product Craft</a></li>
-          <li><a class="hover:text-on-primary transition-colors" href="#craft-pathways">Furniture &amp; Wood Craft</a></li>
-          <li><a class="hover:text-on-primary transition-colors" href="#craft-pathways">Culinary Arts &amp; Hospitality</a></li>
-          <li><a class="hover:text-on-primary transition-colors" href="#craft-pathways">Digital Creative Enterprise</a></li>
+          <% schools.slice(0, 6).forEach(school => { %>
+            <li><a class="hover:text-on-primary transition-colors" href="#craft-pathways"><%= school.title %></a></li>
+          <% }) %>
+          <li><a class="hover:text-on-primary transition-colors" href="#craft-pathways">View all <%= schools.length %> schools</a></li>
           <li><a class="hover:text-on-primary transition-colors" href="#programmes">Short &amp; Online Courses</a></li>
         </ul>
       </div>
@@ -50,9 +49,7 @@
     </div>
     <div class="pt-space-lg flex flex-col md:flex-row items-center justify-between gap-space-md font-caption text-caption text-primary-fixed-dim/80">
       <div class="flex items-center gap-space-sm flex-wrap">
-        <span>Accredited Vocational Centre for Excellence</span>
-        <span>•</span>
-        <span>National Craft &amp; Enterprise Guild Certified</span>
+        <span>Craft &bull; Creativity &bull; Enterprise</span>
         <span>•</span>
         <span>Cohort <%= cohort %> Intake</span>
       </div>

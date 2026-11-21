@@ -12,20 +12,33 @@
     <nav class="hidden xl:flex items-center gap-space-xs">
       <a aria-current="page" class="px-space-xs py-space-2xs transition-colors bg-primary-container text-on-primary font-title-md rounded-lg" href="#programmes">Programmes</a>
       <a class="px-space-xs py-space-2xs text-on-surface-variant font-label-md text-label-md hover:text-on-surface transition-colors" href="#journey">4-Stage Journey</a>
-      <a class="px-space-xs py-space-2xs text-on-surface-variant font-label-md text-label-md hover:text-on-surface transition-colors" href="#craft-pathways">Courses</a>
-      <a class="px-space-xs py-space-2xs text-on-surface-variant font-label-md text-label-md hover:text-on-surface transition-colors" href="#admissions-form">Admissions &amp; Scholarships</a>
-      <a class="px-space-xs py-space-2xs text-on-surface-variant font-label-md text-label-md hover:text-on-surface transition-colors" href="#admissions-form">Tuition &amp; Fees</a>
-      <a class="px-space-xs py-space-2xs text-on-surface-variant font-label-md text-label-md hover:text-on-surface transition-colors" href="#admissions-form">Contact</a>
+      <a class="px-space-xs py-space-2xs text-on-surface-variant font-label-md text-label-md hover:text-on-surface transition-colors" href="#craft-pathways">Schools</a>
+      <a class="px-space-xs py-space-2xs text-on-surface-variant font-label-md text-label-md hover:text-on-surface transition-colors" href="#admissions">Admissions &amp; Scholarships</a>
+      <a class="px-space-xs py-space-2xs text-on-surface-variant font-label-md text-label-md hover:text-on-surface transition-colors" href="#contact">Contact</a>
     </nav>
     <div class="flex items-center gap-space-sm">
       <a class="hidden sm:inline-flex items-center gap-space-2xs px-space-sm py-space-xs rounded-lg bg-surface-container-high text-on-surface font-label-md text-label-md hover:bg-surface-variant transition-colors" href="https://wa.me/2349074026801" rel="noopener noreferrer" target="_blank">
         <span class="material-symbols-outlined text-[18px] text-secondary">chat</span>
         <span>WhatsApp Inquiry</span>
       </a>
-      <a class="inline-flex items-center justify-center px-space-md py-space-xs rounded-lg bg-primary-container text-on-primary font-label-md text-label-md hover:bg-primary transition-all shadow-sm" href="#admissions-form">Apply for <%= cohort %> Cohort</a>
-      <div class="w-8 h-8 rounded-full bg-primary flex items-center justify-center shrink-0">
-        <span class="material-symbols-outlined text-on-primary text-[18px]">person</span>
-      </div>
+      <a class="inline-flex items-center justify-center px-space-md py-space-xs rounded-lg bg-primary-container text-on-primary font-label-md text-label-md hover:bg-primary transition-all shadow-sm" href="#admissions-form"><span class="sm:hidden">Apply Now</span><span class="hidden sm:inline">Apply for <%= cohort %> Cohort</span></a>
+      <button aria-controls="mobile-nav" aria-expanded="false" aria-label="Open menu" class="xl:hidden w-10 h-10 rounded-lg bg-surface-container-high flex items-center justify-center shrink-0 hover:bg-surface-variant transition-colors" id="mobile-nav-toggle" type="button">
+        <span class="material-symbols-outlined text-primary text-[24px]" id="mobile-nav-icon">menu</span>
+      </button>
     </div>
   </div>
+  <nav class="xl:hidden hidden border-t border-outline-variant/60 bg-surface" id="mobile-nav">
+    <div class="max-w-7xl mx-auto px-margin-page py-space-sm flex flex-col">
+      <a class="py-space-xs font-title-md text-title-md text-primary" href="#programmes">Programmes</a>
+      <a class="py-space-xs font-title-md text-title-md text-primary" href="#journey">4-Stage Journey</a>
+      <a class="py-space-xs font-title-md text-title-md text-primary" href="#craft-pathways">Schools</a>
+      <a class="py-space-xs font-title-md text-title-md text-primary" href="#admissions">Admissions &amp; Scholarships</a>
+      <a class="py-space-xs font-title-md text-title-md text-primary" href="#admissions-form">Apply Now</a>
+      <a class="py-space-xs font-title-md text-title-md text-primary" href="#contact">Contact</a>
+      <a class="mt-space-xs inline-flex items-center justify-center gap-space-2xs px-space-sm py-space-xs rounded-lg bg-surface-container-high text-on-surface font-label-md text-label-md" href="https://wa.me/2349074026801" rel="noopener noreferrer" target="_blank">
+        <span class="material-symbols-outlined text-[18px] text-secondary">chat</span>
+        <span>WhatsApp Inquiry</span>
+      </a>
+    </div>
+  </nav>
 </header>
