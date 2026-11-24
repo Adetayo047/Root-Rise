@@ -1,6 +1,7 @@
 import * as store from '../lib/store.js';
 import { passwordMatches, createSessionCookie, clearSessionCookie, isAuthenticated } from '../lib/auth.js';
 import { json, readJson } from '../lib/http.js';
+import { notifyNewPaidApplication } from '../lib/mailer.js';
 import { ADMISSION_STAGES, CRAFT_LABELS } from '../config.js';
 
 // Applicant data must never be cached by the browser or Cloudflare.
@@ -76,8 +77,22 @@ async function updateApplication(request, env, reference) {
   const application = await store.findByReference(env.DB, reference);
   if (!application) return json({ ok: false, error: 'Application not found.' }, 404, NO_STORE);
 
-  const { admissionStage, adminNotes } = await readJson(request);
+  const { admissionStage, adminNotes, confirmPayment } = await readJson(request);
   const updates = {};
+
+  // A payment made outside Paystack (direct bank transfer, cash) that the
+  // team has checked by hand.
+  const confirmingPayment = confirmPayment === true && application.status !== 'paid';
+  if (confirmingPayment) {
+    const now = new Date().toISOString();
+    Object.assign(updates, {
+      status: 'paid',
+      paidAt: now,
+      channel: application.channel || 'bank_transfer',
+      verifiedAt: now,
+      verifiedVia: 'admin',
+    });
+  }
 
   if (admissionStage !== undefined) {
     if (!Object.hasOwn(ADMISSION_STAGES, admissionStage)) {
@@ -98,6 +113,11 @@ async function updateApplication(request, env, reference) {
   if (!Object.keys(updates).length) return json({ ok: true, application }, 200, NO_STORE);
 
   const updated = await store.updateByReference(env.DB, reference, updates);
+  if (confirmingPayment && (await store.claimNotification(env.DB, reference))) {
+    await notifyNewPaidApplication(env, updated).catch((err) => {
+      console.error(`Failed to send notification email for ${reference}:`, err.message);
+    });
+  }
   return json({ ok: true, application: updated }, 200, NO_STORE);
 }
 

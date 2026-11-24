@@ -36,6 +36,27 @@
         </div>
       </div>
     </div>
+    <div class="mb-space-2xl" id="how-to-apply">
+      <h3 class="font-headline-sm text-headline-sm text-primary mb-space-md" data-reveal>How to apply</h3>
+      <ol class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-space-md how-steps">
+        <% [
+          { icon: 'edit_note', title: 'Fill in the form', text: 'Your details, the school you want to join and a short note on why. It takes about five minutes.' },
+          { icon: 'payments', title: `Pay the ${registrationFee} fee`, text: 'By card, bank transfer, USSD or straight from your OPay, PalmPay or Moniepoint app.' },
+          { icon: 'record_voice_over', title: 'Interview & assessment', text: 'We contact you on WhatsApp within 24 hours to book a short interview and aptitude check.' },
+          { icon: 'how_to_reg', title: 'Admission & resumption', text: `Successful candidates receive an admission letter and resume on ${resumptionDate}.` },
+        ].forEach((step, i) => { %>
+          <li class="relative bg-surface-container-lowest rounded-xl p-space-md shadow-sm flex flex-col gap-space-2xs" data-reveal>
+            <div class="flex items-center justify-between">
+              <span class="material-symbols-outlined text-secondary text-[26px]"><%= step.icon %></span>
+              <span class="font-headline-sm text-headline-sm text-outline-variant">Step <%= i + 1 %></span>
+            </div>
+            <span class="font-title-md text-title-md text-primary"><%= step.title %></span>
+            <p class="font-body-sm text-body-sm text-on-surface-variant"><%= step.text %></p>
+          </li>
+        <% }) %>
+      </ol>
+    </div>
+
     <div class="grid grid-cols-1 md:grid-cols-3 gap-space-lg">
       <div class="bg-surface-container-lowest rounded-xl p-space-lg shadow-sm flex flex-col justify-between">
         <div>
@@ -79,7 +100,7 @@
             No prior professional experience required. Your raw passion, trainability, and determination are paramount.
           </p>
           <ul class="space-y-space-xs font-body-sm text-body-sm text-on-surface">
-            <% ['Completed Official Application Form', 'Academic records (WAEC/SSCE or equivalent)', 'Proof of age (Ages 16 – 30 years)', 'Personal statement of motivation', 'Creative portfolio (where applicable)', 'Interview / Aptitude Assessment'].forEach(req => { %>
+            <% ['Completed online application form', 'Registration fee of ' + registrationFee, 'Academic records (WAEC/SSCE or equivalent)', 'Proof of age (Ages 16 – 30 years)', 'Personal statement of motivation', 'Creative portfolio (where applicable)', 'Interview / aptitude assessment'].forEach(req => { %>
               <li class="flex items-start gap-space-xs">
                 <span class="material-symbols-outlined text-primary text-[18px] shrink-0 mt-0.5">check_circle</span>
                 <span><%= req %></span>
@@ -110,14 +131,18 @@
               <span class="font-caption text-caption text-on-surface-variant block mt-space-3xs">All academic instruction, studio work sessions, mentorship access, and foundational syllabus kit.</span>
             </div>
             <div class="bg-surface-container-low p-space-xs rounded-lg">
+              <span class="font-label-md text-label-md text-primary block">Ways to Pay</span>
+              <span class="font-caption text-caption text-on-surface-variant block mt-space-3xs">Debit card, bank transfer, USSD, or directly from OPay, PalmPay, Moniepoint and other bank apps.</span>
+            </div>
+            <div class="bg-surface-container-low p-space-xs rounded-lg">
               <span class="font-label-md text-label-md text-primary block">Specialised Materials</span>
               <span class="font-caption text-caption text-on-surface-variant block mt-space-3xs">Specialised bespoke tools and logistics may apply depending on custom projects.</span>
             </div>
           </div>
         </div>
         <div class="mt-space-md">
-          <a class="block text-center py-space-2xs px-space-sm bg-primary-container text-on-primary rounded-lg font-label-md text-label-md hover:bg-primary transition-colors" href="mailto:rootandriseinstitute@gmail.com?subject=Fee%20Schedule%20Inquiry">
-            Request Full Fee Breakdown
+          <a class="block text-center py-space-2xs px-space-sm bg-primary-container text-on-primary rounded-lg font-label-md text-label-md hover:bg-primary transition-colors" href="https://wa.me/<%= whatsappNumber %>?text=<%= encodeURIComponent(`Hello, please send me the full fee breakdown for the ${cohort} cohort.`) %>" rel="noopener noreferrer" target="_blank">
+            Request Full Fee Breakdown on WhatsApp
           </a>
         </div>
       </div>

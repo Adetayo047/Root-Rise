@@ -6,7 +6,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import ejs from 'ejs';
-import { COHORT, RESUMPTION_DATE, REGISTRATION_FEE_NAIRA, CRAFT_LABELS, ADMISSION_STAGES, SCHOOLS } from '../src/config.js';
+import { COHORT, RESUMPTION_DATE, REGISTRATION_FEE_NAIRA, CRAFT_LABELS, ADMISSION_STAGES, SCHOOLS, BANK_TRANSFER, WHATSAPP_NUMBER } from '../src/config.js';
 
 const root = path.join(path.dirname(fileURLToPath(import.meta.url)), '..');
 const distDir = path.join(root, 'dist');
@@ -19,6 +19,8 @@ const html = await ejs.renderFile(path.join(root, 'views', 'index.ejs'), {
   resumptionDate: RESUMPTION_DATE,
   registrationFee: `₦${REGISTRATION_FEE_NAIRA.toLocaleString('en-NG')}`,
   schools: SCHOOLS,
+  bankTransfer: BANK_TRANSFER,
+  whatsappNumber: WHATSAPP_NUMBER,
 });
 fs.writeFileSync(path.join(distDir, 'index.html'), html);
 

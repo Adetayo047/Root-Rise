@@ -1,0 +1,12 @@
+<%# A tailor's tape measure that scrolls the school names across the page. %>
+<div class="tape" aria-hidden="true">
+  <div class="tape-track">
+    <% for (let copy = 0; copy < 2; copy++) { %>
+      <div class="tape-run">
+        <% schools.forEach(school => { %>
+          <span class="tape-item"><span class="material-symbols-outlined text-[18px]"><%= school.icon %></span><%= school.title %></span>
+        <% }) %>
+      </div>
+    <% } %>
+  </div>
+</div>

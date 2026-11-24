@@ -1,33 +1,60 @@
-<section class="w-full py-space-3xl bg-surface-container-low" id="craft-pathways">
-  <div class="max-w-7xl mx-auto px-margin-page">
-    <div class="flex flex-col md:flex-row md:items-end justify-between mb-space-2xl gap-space-md">
+<section class="w-full py-space-3xl bg-primary text-on-primary relative overflow-hidden" id="craft-pathways">
+  <div class="stitch-grid" aria-hidden="true"></div>
+  <div class="max-w-7xl mx-auto px-margin-page relative">
+    <div class="flex flex-col md:flex-row md:items-end justify-between mb-space-2xl gap-space-md" data-reveal>
       <div>
-        <span class="font-label-caps text-label-caps text-secondary uppercase tracking-widest block mb-space-2xs">Craft &bull; Creativity &bull; Enterprise</span>
-        <h2 class="font-headline-lg text-headline-lg text-primary">Our Schools</h2>
+        <span class="font-label-caps text-label-caps text-secondary-fixed-dim uppercase tracking-widest block mb-space-2xs">Craft &bull; Creativity &bull; Enterprise</span>
+        <h2 class="font-headline-lg text-headline-lg text-on-primary">Our <%= schools.length %> Schools</h2>
       </div>
-      <p class="font-body-md text-body-md text-on-surface-variant max-w-md">
-        <strong class="text-primary">Build the skill. Find your voice. Create your future.</strong>
-        <%= schools.length %> schools, each with hands-on programmes led by experienced practitioners.
+      <p class="font-body-md text-body-md text-primary-fixed-dim max-w-md">
+        <strong class="text-secondary-fixed">Build the skill. Find your voice. Create your future.</strong>
+        Pick a school to see every programme it offers.
       </p>
     </div>
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-space-md">
-      <% schools.forEach(school => { %>
-        <div class="bg-surface-container-lowest rounded-xl p-space-md shadow-sm hover:shadow-md transition-shadow flex flex-col">
-          <div class="w-12 h-12 rounded-lg bg-surface-container flex items-center justify-center text-primary mb-space-sm">
-            <span class="material-symbols-outlined text-[26px]"><%= school.icon %></span>
-          </div>
-          <h3 class="font-title-md text-title-md text-primary mb-space-xs"><%= school.title %></h3>
-          <div class="flex flex-wrap gap-space-3xs pt-space-xs mt-auto">
-            <% school.programmes.forEach(item => { %>
-              <span class="px-space-xs py-space-3xs rounded bg-surface-container-high text-on-surface font-caption text-[11px]"><%= item %></span>
-            <% }) %>
-          </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start" id="school-explorer">
+      <ul class="lg:col-span-5 flex flex-col" role="list" data-reveal-group>
+        <% schools.forEach((school, i) => { %>
+          <li data-reveal>
+            <button aria-controls="school-panel" aria-expanded="<%= i === 0 %>" class="school-tab group w-full flex items-center gap-space-sm py-space-sm px-space-sm text-left rounded-lg transition-colors" data-school="<%= school.key %>" type="button">
+              <span class="material-symbols-outlined text-[22px] text-secondary-fixed-dim shrink-0 transition-transform group-hover:scale-110"><%= school.icon %></span>
+              <span class="font-title-md text-title-md flex-1"><%= school.title %></span>
+              <span class="font-caption text-caption text-primary-fixed-dim shrink-0"><%= school.programmes.length %></span>
+              <span class="material-symbols-outlined text-[18px] text-secondary-fixed-dim shrink-0 school-tab-arrow">arrow_forward</span>
+            </button>
+          </li>
+        <% }) %>
+      </ul>
+
+      <div class="lg:col-span-7 lg:sticky lg:top-28" id="school-panel-slot">
+        <div class="school-panel rounded-2xl bg-primary-container p-space-lg md:p-space-xl" id="school-panel" role="region" aria-live="polite">
+          <% schools.forEach((school, i) => { %>
+            <div class="school-panel-body <%= i === 0 ? '' : 'hidden' %>" data-panel="<%= school.key %>">
+              <div class="flex items-center gap-space-sm mb-space-md">
+                <span class="w-14 h-14 rounded-full bg-secondary-fixed text-on-secondary-fixed flex items-center justify-center shrink-0">
+                  <span class="material-symbols-outlined text-[28px]"><%= school.icon %></span>
+                </span>
+                <span class="font-label-caps text-label-caps text-secondary-fixed-dim uppercase tracking-widest"><%= school.programmes.length %> programmes</span>
+              </div>
+              <h3 class="font-headline-lg text-headline-sm md:text-headline-lg text-secondary-fixed mb-space-lg leading-tight"><%= school.title %></h3>
+              <ul class="grid grid-cols-1 sm:grid-cols-2 gap-x-space-lg" role="list">
+                <% school.programmes.forEach((item, j) => { %>
+                  <li class="programme-item py-space-xs font-body-md text-body-md text-on-primary flex items-start gap-space-xs" style="--i: <%= j %>">
+                    <span class="stitch-dot" aria-hidden="true"></span><span><%= item %></span>
+                  </li>
+                <% }) %>
+              </ul>
+              <a class="mt-space-lg inline-flex items-center gap-space-2xs px-space-md py-space-xs rounded-lg bg-secondary-fixed text-on-secondary-fixed font-label-md text-label-md hover:bg-secondary-fixed-dim transition-colors" data-apply-school="<%= school.key %>" href="#admissions-form">
+                Apply to this school <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+              </a>
+            </div>
+          <% }) %>
         </div>
-      <% }) %>
+      </div>
     </div>
 
     <!-- Digital Creative Enterprise: applies to every student, regardless of chosen craft -->
-    <div class="mt-space-md bg-primary text-on-primary rounded-2xl p-space-lg md:p-space-xl">
+    <div class="mt-space-2xl stitched rounded-2xl p-space-lg md:p-space-xl" data-reveal>
       <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-space-md mb-space-md">
         <div class="flex items-center gap-space-md">
           <div class="w-14 h-14 rounded-xl bg-primary-container flex items-center justify-center text-secondary-fixed shrink-0">

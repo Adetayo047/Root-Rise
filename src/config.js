@@ -5,6 +5,19 @@ export const RESUMPTION_DATE = '28th September 2026';
 export const REGISTRATION_FEE_NAIRA = 20000;
 export const REGISTRATION_FEE_KOBO = REGISTRATION_FEE_NAIRA * 100;
 
+// Account candidates can pay the registration fee into directly (an OPay,
+// Moniepoint or any bank account). Leave accountNumber empty to hide the
+// "Pay by bank transfer" option. The admin team confirms these payments by
+// hand from the dashboard.
+export const BANK_TRANSFER = {
+  bankName: '',
+  accountName: '',
+  accountNumber: '',
+};
+
+// Shown to candidates as the place to send transfer receipts.
+export const WHATSAPP_NUMBER = '2349074026801';
+
 // The schools shown on the landing page and offered in the application form.
 // `key` is what's stored on each application — don't change an existing key,
 // or older applications will lose their label.

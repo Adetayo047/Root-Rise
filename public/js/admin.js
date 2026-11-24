@@ -17,10 +17,11 @@
   let searchTimer = null;
   let toastTimer = null;
 
-  const STATUS_LABELS = { paid: 'Paid', pending: 'Unfinished payment', failed: 'Payment failed' };
+  const STATUS_LABELS = { paid: 'Paid', pending: 'Not paid yet', awaiting_confirmation: 'Transfer to confirm', failed: 'Payment failed' };
   const STATUS_STYLES = {
     paid: 'bg-primary-fixed text-on-primary-fixed',
     pending: 'bg-surface-variant text-on-surface-variant',
+    awaiting_confirmation: 'bg-secondary-fixed text-on-secondary-fixed',
     failed: 'bg-error-container text-on-error-container',
   };
   const STAGE_STYLES = {
@@ -133,6 +134,7 @@
     const cards = [
       { label: 'Paid applications', value: summary.paid, icon: 'how_to_reg' },
       { label: 'Fees received', value: formatNaira(summary.revenueKobo), icon: 'payments' },
+      { label: 'Transfers to confirm', value: summary.awaitingConfirmation, icon: 'account_balance', highlight: summary.awaitingConfirmation > 0 },
       { label: 'Awaiting first contact', value: summary.awaitingContact, icon: 'call', highlight: summary.awaitingContact > 0 },
       { label: 'Admitted', value: summary.byStage.admitted || 0, icon: 'school' },
       { label: 'Scholarship requests', value: summary.scholarshipRequests, icon: 'workspace_premium' },
@@ -239,8 +241,13 @@
           <button class="self-end px-space-lg py-space-xs bg-primary-container text-on-primary font-label-md text-label-md rounded-lg shadow-sm hover:bg-primary transition-all disabled:opacity-60" id="detail-save-btn" type="submit">Save changes</button>
         </form>`
             : `
-        <div class="p-space-md rounded-2xl bg-surface-container-low font-body-sm text-body-sm text-on-surface-variant">
-          This candidate started the form but the registration fee hasn't been confirmed, so there's nothing to process yet. You may want to reach out and help them finish paying.
+        <div class="p-space-md rounded-2xl ${a.status === 'awaiting_confirmation' ? 'bg-secondary-fixed' : 'bg-surface-container-low'} flex flex-col gap-space-sm">
+          <p class="font-body-sm text-body-sm text-on-surface">
+            ${a.status === 'awaiting_confirmation'
+              ? `This candidate says they paid <strong>${formatNaira(a.amountKobo)}</strong> by bank transfer. Check the account for a transfer with reference <strong>${escapeHtml(a.reference)}</strong> (or from this name), then confirm it below.`
+              : "This candidate submitted the form but the registration fee hasn't been confirmed yet. If they paid another way (transfer, cash), confirm it below — otherwise reach out and help them finish paying."}
+          </p>
+          <button class="self-start px-space-lg py-space-xs bg-primary-container text-on-primary font-label-md text-label-md rounded-lg shadow-sm hover:bg-primary transition-all disabled:opacity-60" id="confirm-payment-btn" type="button">Confirm payment received</button>
         </div>`
         }
 
@@ -268,6 +275,11 @@
           </div>
         </div>
       </div>`;
+
+    const confirmBtn = $('confirm-payment-btn');
+    if (confirmBtn) {
+      confirmBtn.addEventListener('click', () => confirmPayment(a));
+    }
 
     const form = $('admin-update-form');
     if (form) {
@@ -313,6 +325,24 @@
     } finally {
       const current = $('detail-save-btn');
       if (current) current.disabled = false;
+    }
+  }
+
+  async function confirmPayment(a) {
+    if (!confirm(`Confirm that ${formatNaira(a.amountKobo)} from ${a.name} has arrived in the account? This marks the application as paid.`)) return;
+    const button = $('confirm-payment-btn');
+    button.disabled = true;
+    try {
+      const { application } = await api('/api/admin/applications/' + encodeURIComponent(a.reference), {
+        method: 'PATCH',
+        body: JSON.stringify({ confirmPayment: true }),
+      });
+      renderDetail(application);
+      showToast('Payment confirmed');
+      await loadApplications();
+    } catch (err) {
+      handleError(err);
+      button.disabled = false;
     }
   }
 

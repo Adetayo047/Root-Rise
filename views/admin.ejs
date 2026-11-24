@@ -64,7 +64,7 @@
       <h1 class="font-headline-lg-mobile text-headline-lg-mobile md:font-headline-lg md:text-headline-lg text-primary">Applications</h1>
     </div>
 
-    <section class="grid grid-cols-2 lg:grid-cols-5 gap-space-sm" id="stats"></section>
+    <section class="grid grid-cols-2 lg:grid-cols-6 gap-space-sm" id="stats"></section>
 
     <section class="bg-surface-container-low rounded-2xl p-space-md flex flex-col lg:flex-row gap-space-sm lg:items-end">
       <div class="flex flex-col gap-space-3xs flex-1 min-w-0">
@@ -79,7 +79,8 @@
           <label class="font-label-md text-label-md text-primary" for="filter-status">Payment</label>
           <select class="px-space-sm py-space-xs rounded bg-surface-container-lowest text-on-surface focus:outline-none focus:ring-2 focus:ring-secondary shadow-sm" id="filter-status">
             <option value="paid">Paid</option>
-            <option value="pending">Unfinished payment</option>
+            <option value="awaiting_confirmation">Transfer to confirm</option>
+            <option value="pending">Not paid yet</option>
             <option value="failed">Failed</option>
             <option value="all">All</option>
           </select>

@@ -45,7 +45,7 @@
         <div class="p-space-md bg-surface-container rounded-xl flex items-center gap-space-sm">
           <span class="material-symbols-outlined text-secondary text-[32px]">military_tech</span>
           <span class="font-body-sm text-body-sm text-on-surface-variant">
-            Registered under statutory enterprise development and vocational excellence frameworks.
+            Applications are reviewed on a rolling basis — apply early to secure your place.
           </span>
         </div>
       </div>
@@ -54,7 +54,7 @@
           <div class="flex items-center justify-between pb-space-xs">
             <div>
               <h3 class="font-headline-sm text-headline-sm text-primary">Candidate Application Intake</h3>
-              <span class="font-caption text-caption text-on-surface-variant">Registration Fee: <%= registrationFee %> — pay securely online via Paystack</span>
+              <span class="font-caption text-caption text-on-surface-variant">Registration Fee: <%= registrationFee %> — submit your details first, then choose how to pay</span>
             </div>
             <span class="font-label-caps text-label-caps px-space-xs py-space-3xs bg-secondary-fixed text-on-secondary-fixed rounded uppercase font-bold">Step 1 of 2</span>
           </div>
@@ -101,21 +101,83 @@
           <div id="application-error-notice" class="hidden p-space-sm bg-error-container text-on-error-container rounded-lg text-body-sm font-body-sm"></div>
           <div class="pt-space-2xs flex flex-col sm:flex-row items-center justify-between gap-space-sm">
             <div class="flex items-center gap-space-2xs text-secondary font-caption text-caption">
-              <span class="material-symbols-outlined text-[16px]">lock</span>
-              <span>Payments are processed securely by Paystack.</span>
+              <span class="material-symbols-outlined text-[16px]">info</span>
+              <span>Next: pay the <%= registrationFee %> fee by card, transfer, OPay or USSD.</span>
             </div>
             <button class="w-full sm:w-auto px-space-xl py-space-sm bg-primary-container text-on-primary font-title-md text-title-md rounded-lg shadow-md hover:bg-primary transition-all flex items-center justify-center gap-space-xs disabled:opacity-60 disabled:cursor-not-allowed" id="submit-application-btn" type="submit">
-              <span id="submit-application-btn-label">Pay <%= registrationFee %> &amp; Submit</span>
-              <span class="material-symbols-outlined text-[20px]">payments</span>
+              <span id="submit-application-btn-label">Submit Application</span>
+              <span class="material-symbols-outlined text-[20px]">arrow_forward</span>
             </button>
           </div>
         </form>
-        <div class="hidden p-space-md bg-primary text-on-primary rounded-xl mt-space-md text-center" id="application-success-notice">
+
+        <!-- Step 2: payment. Shown once the application has been saved. -->
+        <div class="hidden flex-col gap-space-md" id="payment-step">
+          <div class="flex items-start justify-between gap-space-sm">
+            <div>
+              <h3 class="font-headline-sm text-headline-sm text-primary">Application Received</h3>
+              <span class="font-body-sm text-body-sm text-on-surface-variant">Now pay the <%= registrationFee %> registration fee to complete it.</span>
+            </div>
+            <span class="font-label-caps text-label-caps px-space-xs py-space-3xs bg-secondary-fixed text-on-secondary-fixed rounded uppercase font-bold shrink-0">Step 2 of 2</span>
+          </div>
+          <div class="p-space-sm bg-surface-container-lowest rounded-xl">
+            <span class="font-caption text-caption text-on-surface-variant block">Your application reference — keep it safe</span>
+            <span class="font-title-md text-title-md text-primary break-all" id="payment-reference"></span>
+          </div>
+
+          <div class="hidden p-space-md bg-surface-container-lowest rounded-xl flex-col gap-space-sm" id="pay-online-option">
+            <div class="flex items-center gap-space-xs">
+              <span class="material-symbols-outlined text-secondary">credit_card</span>
+              <span class="font-title-md text-title-md text-primary">Pay online now</span>
+            </div>
+            <p class="font-body-sm text-body-sm text-on-surface-variant">Card, bank transfer or USSD through Paystack. Choose <strong>Transfer</strong> in the payment window to pay from OPay, PalmPay, Moniepoint or any bank app. Confirmation is instant.</p>
+            <button class="self-start px-space-lg py-space-xs bg-primary-container text-on-primary font-label-md text-label-md rounded-lg shadow-sm hover:bg-primary transition-all disabled:opacity-60 flex items-center gap-space-2xs" id="pay-online-btn" type="button">
+              <span id="pay-online-btn-label">Pay <%= registrationFee %> Online</span>
+              <span class="material-symbols-outlined text-[18px]">payments</span>
+            </button>
+          </div>
+
+          <% if (bankTransfer.accountNumber) { %>
+          <div class="p-space-md bg-surface-container-lowest rounded-xl flex flex-col gap-space-sm" id="bank-transfer-option">
+            <div class="flex items-center gap-space-xs">
+              <span class="material-symbols-outlined text-secondary">account_balance</span>
+              <span class="font-title-md text-title-md text-primary">Pay by direct bank transfer</span>
+            </div>
+            <p class="font-body-sm text-body-sm text-on-surface-variant">Send exactly <strong><%= registrationFee %></strong> to the account below from any bank or OPay app. Put your reference in the transfer description.</p>
+            <dl class="grid grid-cols-1 sm:grid-cols-3 gap-space-sm bg-surface-container-low rounded-lg p-space-sm">
+              <div><dt class="font-caption text-caption text-on-surface-variant">Bank</dt><dd class="font-label-md text-label-md text-primary"><%= bankTransfer.bankName %></dd></div>
+              <div><dt class="font-caption text-caption text-on-surface-variant">Account number</dt><dd class="font-label-md text-label-md text-primary flex items-center gap-space-2xs"><span><%= bankTransfer.accountNumber %></span><button class="text-secondary hover:text-primary" data-copy="<%= bankTransfer.accountNumber %>" title="Copy account number" type="button"><span class="material-symbols-outlined text-[16px]">content_copy</span></button></dd></div>
+              <div><dt class="font-caption text-caption text-on-surface-variant">Account name</dt><dd class="font-label-md text-label-md text-primary"><%= bankTransfer.accountName %></dd></div>
+            </dl>
+            <button class="self-start px-space-lg py-space-xs bg-surface-container-high text-on-surface font-label-md text-label-md rounded-lg hover:bg-surface-variant transition-colors disabled:opacity-60" id="transfer-done-btn" type="button">I&rsquo;ve made the transfer</button>
+          </div>
+          <% } %>
+
+          <div class="hidden p-space-sm bg-error-container text-on-error-container rounded-lg text-body-sm font-body-sm" id="payment-error-notice"></div>
+          <a class="inline-flex items-center gap-space-2xs text-secondary font-label-md text-label-md hover:underline" href="https://wa.me/<%= whatsappNumber %>" id="payment-help-link" rel="noopener noreferrer" target="_blank">
+            <span class="material-symbols-outlined text-[18px]">chat</span>
+            <span>Need help paying? Chat with admissions on WhatsApp</span>
+          </a>
+        </div>
+
+        <div class="hidden p-space-md bg-primary text-on-primary rounded-xl text-center" id="application-success-notice">
           <span class="material-symbols-outlined text-secondary-fixed text-[36px] mb-space-2xs">check_circle</span>
           <h4 class="font-headline-sm text-headline-sm text-secondary-fixed">Payment Received &amp; Application Registered</h4>
           <p class="font-body-md text-body-md text-primary-fixed-dim mt-space-3xs">
-            Thank you for applying to the <%= cohort %> Cohort. Your registration fee has been confirmed — check your WhatsApp and email for your receipt and interview schedule.
+            Thank you for applying to the <%= cohort %> Cohort. Your registration fee has been confirmed. Our admissions team will contact you on WhatsApp within 24 hours to schedule your interview.
           </p>
+        </div>
+
+        <div class="hidden p-space-md bg-primary text-on-primary rounded-xl text-center flex-col items-center gap-space-2xs" id="transfer-success-notice">
+          <span class="material-symbols-outlined text-secondary-fixed text-[36px]">schedule</span>
+          <h4 class="font-headline-sm text-headline-sm text-secondary-fixed">Transfer Noted — We&rsquo;ll Confirm It Shortly</h4>
+          <p class="font-body-md text-body-md text-primary-fixed-dim">
+            Our admissions team will check for your payment and confirm your registration, usually within 24 hours. To speed things up, send your transfer receipt on WhatsApp.
+          </p>
+          <a class="mt-space-2xs inline-flex items-center gap-space-2xs px-space-md py-space-xs rounded-lg bg-secondary-fixed text-on-secondary-fixed font-label-md text-label-md" href="https://wa.me/<%= whatsappNumber %>" id="send-receipt-link" rel="noopener noreferrer" target="_blank">
+            <span class="material-symbols-outlined text-[18px]">chat</span>
+            <span>Send Receipt on WhatsApp</span>
+          </a>
         </div>
       </div>
     </div>

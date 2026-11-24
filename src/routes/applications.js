@@ -1,10 +1,11 @@
 import * as store from '../lib/store.js';
 import { verifyTransaction, isSuccessfulPayment } from '../lib/paystack.js';
-import { notifyNewPaidApplication } from '../lib/mailer.js';
+import { notifyNewPaidApplication, notifyTransferClaim } from '../lib/mailer.js';
 import { json, readJson } from '../lib/http.js';
 import { SCHOOL_LABELS, REGISTRATION_FEE_KOBO } from '../config.js';
 
 const VERIFY_PATH = /^\/api\/applications\/([^/]+)\/verify$/;
+const TRANSFER_PATH = /^\/api\/applications\/([^/]+)\/transfer$/;
 
 export async function handleApplications(request, env, ctx, pathname) {
   if (request.method !== 'POST') {
@@ -16,6 +17,10 @@ export async function handleApplications(request, env, ctx, pathname) {
   const match = pathname.match(VERIFY_PATH);
   if (match) {
     return verifyApplication(decodeURIComponent(match[1]), env, ctx);
+  }
+  const transferMatch = pathname.match(TRANSFER_PATH);
+  if (transferMatch) {
+    return claimBankTransfer(decodeURIComponent(transferMatch[1]), env, ctx);
   }
   return json({ ok: false, error: 'Not found.' }, 404);
 }
@@ -125,5 +130,32 @@ async function verifyApplication(reference, env, ctx) {
     );
   }
 
+  return json({ ok: true });
+}
+
+// The candidate says they've paid by direct bank transfer (e.g. into the
+// institute's OPay account). We can't check that automatically, so the
+// application is flagged for the admissions team to confirm by hand.
+async function claimBankTransfer(reference, env, ctx) {
+  const application = await store.findByReference(env.DB, reference);
+  if (!application) {
+    return json({ ok: false, error: 'No application found for this reference.' }, 404);
+  }
+  if (application.status === 'paid') {
+    return json({ ok: true, alreadyPaid: true });
+  }
+  if (application.status === 'awaiting_confirmation') {
+    return json({ ok: true });
+  }
+
+  const updated = await store.updateByReference(env.DB, reference, {
+    status: 'awaiting_confirmation',
+    channel: 'bank_transfer',
+  });
+  ctx.waitUntil(
+    notifyTransferClaim(env, updated).catch((err) => {
+      console.error(`Failed to send transfer notification for ${reference}:`, err.message);
+    })
+  );
   return json({ ok: true });
 }

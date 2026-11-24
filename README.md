@@ -10,8 +10,21 @@ application/registration form. Runs on **Cloudflare Workers**:
 - Applications are stored in **Cloudflare D1** (a SQLite database).
 - Notification emails are sent through **Resend**.
 
-Cohort, resumption date and registration fee live in `src/config.js` —
-change them there and redeploy.
+Cohort, resumption date, registration fee, the schools list and the bank
+account for direct transfers live in `src/config.js` — change them there and
+redeploy.
+
+## How candidates pay
+
+1. The candidate submits the form — the application is saved straight away.
+2. They then choose how to pay the registration fee:
+   - **Pay online** (Paystack): card, bank transfer (works from OPay, PalmPay,
+     Moniepoint or any bank app) or USSD. Confirmed automatically. Needs the
+     Paystack keys below.
+   - **Direct bank transfer** into the account in `BANK_TRANSFER` in
+     `src/config.js` (hidden while `accountNumber` is empty). The candidate
+     clicks "I've made the transfer", the team gets an email, and someone
+     confirms it in `/admin` with **Confirm payment received**.
 
 ## Deploying on Cloudflare
 

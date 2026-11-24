@@ -12,18 +12,6 @@ const DEFAULT_FROM = 'Root & Rise Institute — Admissions <onboarding@resend.de
  * verify call (callers are responsible for that guard).
  */
 export async function notifyNewPaidApplication(env, application) {
-  if (!env.RESEND_API_KEY) {
-    console.warn('RESEND_API_KEY is not set — skipping application notification email.');
-    return;
-  }
-  const to = (env.ADMISSIONS_NOTIFY_EMAIL || '')
-    .split(',')
-    .map((address) => address.trim())
-    .filter(Boolean);
-  if (!to.length) {
-    console.warn('No ADMISSIONS_NOTIFY_EMAIL configured — skipping application notification email.');
-    return;
-  }
 
   const craftLabel = CRAFT_LABELS[application.craft] || application.craft;
   const amountNaira = (application.amountKobo / 100).toLocaleString('en-NG');
@@ -68,19 +56,61 @@ export async function notifyNewPaidApplication(env, application) {
     </table>
   `;
 
+  await sendToAdmissions(env, `New Paid Application — ${application.name} (${craftLabel})`, text, html);
+}
+
+/**
+ * Tells the admissions team a candidate says they've paid by direct bank
+ * transfer, so someone checks the account and confirms it in the dashboard.
+ */
+export async function notifyTransferClaim(env, application) {
+  const craftLabel = CRAFT_LABELS[application.craft] || application.craft;
+  const amountNaira = (application.amountKobo / 100).toLocaleString('en-NG');
+  const lines = [
+    ['Name', application.name],
+    ['Phone', application.phone],
+    ['Email', application.email],
+    ['School', craftLabel],
+    ['Amount expected', `₦${amountNaira}`],
+    ['Reference', application.reference],
+  ];
+  const text = [
+    'A candidate says they have paid the registration fee by bank transfer.',
+    'Check the account for the payment, then open the admin dashboard and click "Confirm payment received".',
+    '',
+    ...lines.map(([label, value]) => `${label}: ${value}`),
+  ].join('\n');
+  const html = `
+    <h2 style="font-family:sans-serif;color:#011e0f;">Bank transfer to confirm — ${escapeHtml(application.name)}</h2>
+    <p style="font-family:sans-serif;font-size:14px;">Check the account for this payment, then open the admin dashboard and click <strong>Confirm payment received</strong>.</p>
+    <table style="font-family:sans-serif;font-size:14px;border-collapse:collapse;">
+      ${lines.map(([label, value]) => `<tr><td style="padding:4px 12px 4px 0;color:#555;">${label}</td><td>${escapeHtml(value)}</td></tr>`).join('')}
+    </table>
+  `;
+  await sendToAdmissions(env, `Bank transfer to confirm — ${application.name} (₦${amountNaira})`, text, html);
+}
+
+async function sendToAdmissions(env, subject, text, html) {
+  if (!env.RESEND_API_KEY) {
+    console.warn('RESEND_API_KEY is not set — skipping admissions email.');
+    return;
+  }
+  const to = (env.ADMISSIONS_NOTIFY_EMAIL || '')
+    .split(',')
+    .map((address) => address.trim())
+    .filter(Boolean);
+  if (!to.length) {
+    console.warn('No ADMISSIONS_NOTIFY_EMAIL configured — skipping admissions email.');
+    return;
+  }
+
   const res = await fetch(RESEND_URL, {
     method: 'POST',
     headers: {
       Authorization: `Bearer ${env.RESEND_API_KEY}`,
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({
-      from: env.MAIL_FROM || DEFAULT_FROM,
-      to,
-      subject: `New Paid Application — ${application.name} (${craftLabel})`,
-      text,
-      html,
-    }),
+    body: JSON.stringify({ from: env.MAIL_FROM || DEFAULT_FROM, to, subject, text, html }),
   });
 
   if (!res.ok) {

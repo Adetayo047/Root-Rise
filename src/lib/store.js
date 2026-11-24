@@ -180,6 +180,7 @@ export async function getSummary(db) {
          COALESCE(SUM(status = 'paid'), 0) AS paid,
          COALESCE(SUM(status = 'pending'), 0) AS pending,
          COALESCE(SUM(status = 'failed'), 0) AS failed,
+         COALESCE(SUM(status = 'awaiting_confirmation'), 0) AS awaitingConfirmation,
          COALESCE(SUM(CASE WHEN status = 'paid' THEN amount_kobo ELSE 0 END), 0) AS revenueKobo,
          COALESCE(SUM(status = 'paid' AND admission_stage = 'new'), 0) AS awaitingContact,
          COALESCE(SUM(status = 'paid' AND scholarship_opt_in = 1), 0) AS scholarshipRequests
