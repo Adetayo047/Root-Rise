@@ -213,6 +213,28 @@ document.addEventListener('click', async function (event) {
   }
 
   tabs.forEach((tab) => tab.addEventListener('click', () => select(tab, true)));
+
+  // Only the first few schools show until "View all" is pressed.
+  const moreBtn = document.getElementById('school-more-btn');
+  if (moreBtn) {
+    const extras = explorer.querySelectorAll('.school-extra');
+    const label = document.getElementById('school-more-label');
+    const icon = document.getElementById('school-more-icon');
+    const allText = label.textContent;
+    moreBtn.addEventListener('click', () => {
+      const open = moreBtn.getAttribute('aria-expanded') !== 'true';
+      extras.forEach((li) => li.classList.toggle('hidden', !open));
+      moreBtn.setAttribute('aria-expanded', String(open));
+      label.textContent = open ? 'Show fewer schools' : allText;
+      icon.style.transform = open ? 'rotate(180deg)' : '';
+      if (!open) {
+        // Don't leave the selected school hidden in the collapsed list.
+        const active = tabs.find((t) => t.getAttribute('aria-expanded') === 'true');
+        if (active && active.closest('.school-extra')) select(tabs[0], false);
+        explorer.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
+  }
   wide.addEventListener('change', () => place(tabs.find((t) => t.getAttribute('aria-expanded') === 'true')));
   place(tabs[0]);
 

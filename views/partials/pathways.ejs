@@ -13,9 +13,11 @@
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-space-lg items-start" id="school-explorer">
-      <ul class="lg:col-span-5 flex flex-col" role="list" data-reveal-group>
+      <div class="lg:col-span-5">
+      <ul class="flex flex-col" id="school-list" role="list">
+        <% const SHOWN = 6; %>
         <% schools.forEach((school, i) => { %>
-          <li data-reveal>
+          <li data-reveal <% if (i >= SHOWN) { %>class="school-extra hidden"<% } %>>
             <button aria-controls="school-panel" aria-expanded="<%= i === 0 %>" class="school-tab group w-full flex items-center gap-space-sm py-space-sm px-space-sm text-left rounded-lg transition-colors" data-school="<%= school.key %>" type="button">
               <span class="material-symbols-outlined text-[22px] text-secondary-fixed-dim shrink-0 transition-transform group-hover:scale-110"><%= school.icon %></span>
               <span class="font-title-md text-title-md flex-1"><%= school.title %></span>
@@ -25,6 +27,11 @@
           </li>
         <% }) %>
       </ul>
+      <button aria-controls="school-list" aria-expanded="false" class="mt-space-md w-full inline-flex items-center justify-center gap-space-2xs px-space-md py-space-sm rounded-lg stitched text-secondary-fixed font-label-md text-label-md hover:bg-primary-container transition-colors" id="school-more-btn" type="button">
+        <span id="school-more-label">View all <%= schools.length %> schools</span>
+        <span class="material-symbols-outlined text-[18px] transition-transform" id="school-more-icon">expand_more</span>
+      </button>
+      </div>
 
       <div class="lg:col-span-7 lg:sticky lg:top-28" id="school-panel-slot">
         <div class="school-panel rounded-2xl bg-primary-container p-space-lg md:p-space-xl" id="school-panel" role="region" aria-live="polite">
